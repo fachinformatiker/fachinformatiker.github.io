@@ -1,0 +1,115 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Setting up a Caching-Only DNS Server - fachinformatiker.app</title><meta name="description" content="While reading about DNS servers and BIND9, I came across the concept of Caching-Only DNS servers. I'm not going to go into great detail about how DNS works, but simply put, a Caching-Only DNS, well, caches DNS query results for the domain name being queried. The results are stored for a period of time known as the time-to-live, or TTL, which is specified on the name servers of the particular queried domain. Most computers and routers query the ISP's DNS servers each time by default.Preface:To really get a good understanding of how DNS works, I've found the following quite helpful:- DNS and BIND (you can pickup a used copy for fairly cheap, or even get the previous version for even less!)- DNS &amp; BIND Cookbook (supplement to the above; has many great examples and configurations for various DNS setups)- Otherwise there are many good resources online; I've used StackOverflow to help guide me in the right direction and many other web pages for help and information.What you are going to need:- A Computer to host the Caching-Only DNS server (I'll be deploying this in a VM as there is no need for a powerful computer to run a small DNS server)- A Linux distribution (I'll be using Ubuntu Server 8.04)- Some basic Linux knowledge as well as networking knowledge"><meta name="generator" content="Publii Open-Source CMS for Static Site"><link rel="canonical" href="https://fachinformatiker.github.io/fachinformatiker.github.io/setting-up-a-caching-only-dns-server.html"><link rel="alternate" type="application/atom+xml" href="https://fachinformatiker.github.io/fachinformatiker.github.io/feed.xml"><link rel="alternate" type="application/json" href="https://fachinformatiker.github.io/fachinformatiker.github.io/feed.json"><meta property="og:title" content="Setting up a Caching-Only DNS Server"><meta property="og:site_name" content="fachinformatiker.app"><meta property="og:description" content="While reading about DNS servers and BIND9, I came across the concept of Caching-Only DNS servers. I'm not going to go into great detail about how DNS works, but simply put, a Caching-Only DNS, well, caches DNS query results for the domain name being queried. The results are stored for a period of time known as the time-to-live, or TTL, which is specified on the name servers of the particular queried domain. Most computers and routers query the ISP's DNS servers each time by default.Preface:To really get a good understanding of how DNS works, I've found the following quite helpful:- DNS and BIND (you can pickup a used copy for fairly cheap, or even get the previous version for even less!)- DNS &amp; BIND Cookbook (supplement to the above; has many great examples and configurations for various DNS setups)- Otherwise there are many good resources online; I've used StackOverflow to help guide me in the right direction and many other web pages for help and information.What you are going to need:- A Computer to host the Caching-Only DNS server (I'll be deploying this in a VM as there is no need for a powerful computer to run a small DNS server)- A Linux distribution (I'll be using Ubuntu Server 8.04)- Some basic Linux knowledge as well as networking knowledge"><meta property="og:url" content="https://fachinformatiker.github.io/fachinformatiker.github.io/setting-up-a-caching-only-dns-server.html"><meta property="og:type" content="article"><link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><style>h1,h2,h3,h4,h5,h6,.btn,[type=button],[type=submit],button,.navbar .navbar__menu li,.navbar_mobile_sidebar .navbar__menu li,.feed__author,.post__tag,.post__share>a span,.post__nav-link>span,.footer{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}body,h1,.h1,blockquote,.search__input,.author__name,.author__info>p,.feed__item h2,.post__nav-link{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}</style><link rel="stylesheet" href="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/css/style.css?v=cc87cb8806c844f0646558fe70d5c5d1"><script type="application/ld+json">{"@context":"http://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://fachinformatiker.github.io/fachinformatiker.github.io/setting-up-a-caching-only-dns-server.html"},"headline":"Setting up a Caching-Only DNS Server","datePublished":"2019-07-11T20:57","dateModified":"2020-05-12T08:43","description":"<p>While reading about DNS servers and BIND9, I came across the concept of Caching-Only DNS servers. I'm not going to go into great detail about how DNS works, but simply put, a Caching-Only DNS, well, caches DNS query results for the domain name being queried. The results are stored for a period of time known as the time-to-live, or TTL, which is specified on the name servers of the particular queried domain. Most computers and routers query the ISP's DNS servers each time by default.</p>\n<p><b><u>Preface:</u></b><br />\nTo really get a good understanding of how DNS works, I've found the following quite helpful:<br />\n- <a href=\"http://www.amazon.com/DNS-BIND-5th-Cricket-Liu/dp/0596100574?ie=UTF8&amp;tag=chricari-20&amp;link_code=btl&amp;camp=213689&amp;creative=392969\" target=\"_blank\" rel=\"noopener noreferrer\">DNS and BIND</a> (you can pickup a used copy for fairly cheap, or even get the previous version for even less!)<br />\n- <a href=\"http://www.amazon.com/DNS-BIND-Cookbook-Cricket-Liu/dp/0596004109?ie=UTF8&amp;tag=chricari-20&amp;link_code=btl&amp;camp=213689&amp;creative=392969\" target=\"_blank\" rel=\"noopener noreferrer\">DNS &amp; BIND Cookbook</a> (supplement to the above; has many great examples and configurations for various DNS setups)<br />\n- Otherwise there are many good resources online; I've used <a href=\"http://stackoverflow.com/questions/tagged/dns\">StackOverflow</a> to help guide me in the right direction and many other web pages for help and information.<br />\n<a name=\"more\"></a><br />\n<b><u>What you are going to need:</u></b><br />\n- A Computer to host the Caching-Only DNS server (I'll be deploying this in a VM as there is no need for a powerful computer to run a small DNS server)<br />\n- A Linux distribution (I'll be using Ubuntu Server 8.04)<br />\n- Some basic Linux knowledge as well as networking knowledge</p>\n<div></div>\n","author":{"@type":"Person","name":"Patrick Szalewicz"},"publisher":{"@type":"Organization","name":"Patrick Szalewicz"}}</script><script src="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/js/ls.parent-fit.min.js?v=f8467455ea5c88e3e51a4f212d2632bd"></script><script async src="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/js/lazysizes.min.js?v=6a69d476c93de2b78a72acb259abccea"></script></head><body><div class="site-container"><header class="top" id="js-header"><a class="logo" href="https://fachinformatiker.github.io/fachinformatiker.github.io/">fachinformatiker.app</a><div class="search"><div class="search__overlay js-search-overlay"><div class="search__overlay-inner"><form action="https://fachinformatiker.github.io/fachinformatiker.github.io/search.html" class="search__form"><input class="search__input js-search-input" type="search" name="q" placeholder="search..." autofocus="autofocus"></form><button class="search__close js-search-close" aria-label="Close">Close</button></div></div><button class="search__btn js-search-btn" aria-label="Search"><svg role="presentation" focusable="false"><use xlink:href="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/svg/svg-map.svg#search"/></svg></button></div></header><main><article class="post"><div class="hero"><header class="hero__content"><div class="wrapper"><div class="post__meta"><time datetime="2019-07-11T20:57">July 11, 2019</time></div><h1>Setting up a Caching-Only DNS Server</h1><div class="post__meta post__meta--author"><a href="https://fachinformatiker.github.io/fachinformatiker.github.io/authors/patrick-szalewicz/" class="feed__author invert">Patrick Szalewicz</a></div></div></header></div><div class="wrapper post__entry"><p>While reading about DNS servers and BIND9, I came across the concept of Caching-Only DNS servers. I'm not going to go into great detail about how DNS works, but simply put, a Caching-Only DNS, well, caches DNS query results for the domain name being queried. The results are stored for a period of time known as the time-to-live, or TTL, which is specified on the name servers of the particular queried domain. Most computers and routers query the ISP's DNS servers each time by default.</p><p><b><u>Preface:</u></b><br>To really get a good understanding of how DNS works, I've found the following quite helpful:<br>- <a href="http://www.amazon.com/DNS-BIND-5th-Cricket-Liu/dp/0596100574?ie=UTF8&amp;tag=chricari-20&amp;link_code=btl&amp;camp=213689&amp;creative=392969" target="_blank" rel="noopener noreferrer">DNS and BIND</a> (you can pickup a used copy for fairly cheap, or even get the previous version for even less!)<br>- <a href="http://www.amazon.com/DNS-BIND-Cookbook-Cricket-Liu/dp/0596004109?ie=UTF8&amp;tag=chricari-20&amp;link_code=btl&amp;camp=213689&amp;creative=392969" target="_blank" rel="noopener noreferrer">DNS &amp; BIND Cookbook</a> (supplement to the above; has many great examples and configurations for various DNS setups)<br>- Otherwise there are many good resources online; I've used <a href="http://stackoverflow.com/questions/tagged/dns">StackOverflow</a> to help guide me in the right direction and many other web pages for help and information.<br><a name="more"></a><br><b><u>What you are going to need:</u></b><br>- A Computer to host the Caching-Only DNS server (I'll be deploying this in a VM as there is no need for a powerful computer to run a small DNS server)<br>- A Linux distribution (I'll be using Ubuntu Server 8.04)<br>- Some basic Linux knowledge as well as networking knowledge</p><div></div><p><b><u>Step One, Chose your computer / Setup your VM:</u></b><br>Because there is no need to have an extremely powerful (or semi-powerful, for that matter) computer, I've chosen to deploy my server on a VM; If you chose to do this on a physical computer, the steps will still be extremely similar, if not identical, after this step.</p><p>We are going to need to access this computer directly from other machines and/or the router, so we are going to want to set a static IP for this computer; this can be done router and I won't be covering it here. Also, when deploying in a VM, you are going to want to set the networking adapter to "Bridged Mode"; by default VirtualBox (and I believe VMWare) are set to "NAT".</p><p>I've configured my VM with 256MB of RAM and 2GB of hard drive space (trust me, this will be plenty for a small network).</p><p><b><u>Step Two, Install Linux:</u></b><br>I'm not going to go into detail about how to install Ubuntu Server; but when installing you will have an option to pre-install software; chose "OpenSSH server" by hitting the space key. You may notice that there is an option for "DNS Server"; I'll be installing this manually after the server has rebooted.</p><p><b><u>Step Three, Install BIND9:</u></b><br>You are going to want to run all the commands as root; the easiest way to accomplish this is by running</p><pre><code> sudo su</code></pre><p>Along with BIND9, I'll be installing vim; the command below reflects this.</p><pre><code> apt-get -y install bind9 vim-full</code></pre><p>The '-y' flag just speeds up the process and doesn't prompt for your confirmation of everything to be installed.</p><p><b><u>Step Four, Configure BIND9:</u></b><br>Your going to want to change several of the configuration files. Your 'named.conf.options' file should look like below; the file should be located at "/etc/bind/named.conf.options". Now edit this file in <i>vim</i> editor you installed earlier, or chose what ever editor your most comfortable with.</p><pre><code> vi /etc/bind/named.conf.options</code></pre><p>Then, change the file so it looks like the following (changes/additions in bold):</p><pre><code> // Your local network and any IP address range you want to allow to query the DNS server
+ <b>acl internal { 192.168.2/24; };</b>
+
+ options {
+         directory "/var/cache/bind";
+ 
+         // Disable all zone transfer requests
+         <b>allow-transfer {"none";};</b>
+ 
+         // Closed DNS; permit only allowed IP addresses specified above to issue queries
+         <b>allow-query { internal; };</b>
+ 
+         // If there is a firewall between you and nameservers you want
+         // to talk to, you might need to uncomment the query-source
+         // directive below.  Previous versions of BIND always asked
+         // questions using port 53, but BIND 8.1 and later use an unprivileged
+         // port by default.
+ 
+         // query-source address * port 53;
+ 
+         // If your ISP provided one or more IP addresses for stable
+         // nameservers, you probably want to use them as forwarders.
+         // Uncomment the following block, and insert the addresses replacing
+         // the all-0's placeholder.
+ 
+         // forwarders {
+         //      0.0.0.0;
+         // };
+ 
+         auth-nxdomain no;    # conform to RFC1035
+         listen-on-v6 { any; };
+ };
+</code></pre><p>Now you need to edit the 'named.conf' file</p><pre><code> vi /etc/bind/named.conf</code></pre><p>Then, change the file so it looks like the following (changes/additions in bold):</p><pre><code> // This is the primary configuration file for the BIND DNS server named.
+ //
+ // Please read /usr/share/doc/bind9/README.Debian.gz for information on the
+ // structure of BIND configuration files in Debian, *BEFORE* you customize
+ // this configuration file.
+ //
+ // If you are just adding zones, please do that in /etc/bind/named.conf.local
+ 
+ include "/etc/bind/named.conf.options";
+ 
+ // prime the server with knowledge of the root servers
+ zone "." {
+         type hint;
+         file "/etc/bind/db.root";
+ };
+ 
+ // be authoritative for the localhost forward and reverse zones, and for
+ // broadcast zones as per RFC 1912
+ 
+ zone "localhost" {
+         type master;
+         file "/etc/bind/db.local";
+         <b>allow-update{none;};</b>
+ };
+ 
+ zone "127.in-addr.arpa" {
+         type master;
+         file "/etc/bind/db.127";
+         <b>allow-update{none;};</b>
+ };
+ 
+ zone "0.in-addr.arpa" {
+         type master;
+         file "/etc/bind/db.0";
+ };
+ 
+ zone "255.in-addr.arpa" {
+         type master;
+         file "/etc/bind/db.255";
+ };
+ 
+ include "/etc/bind/named.conf.local";
+</code></pre><p>Now you are going to want to restart the BIND9 service; to do this:</p><pre><code> /etc/init.d/bind9 reload
+</code></pre><p>If the service restarts with no problems, continue to the next step; otherwise, go back and check that you've typed everything correctly.</p><p><b><u>Step Five, Testing the DNS server:</u></b><br>To test the DNS server is working properly, you are going to want to use the 'dig' command.</p><pre><code> dig example.com</code></pre><p>You should get output that is similar to the following:</p><pre><code> ; &lt;&lt;&gt;&gt; DiG 9.4.2-P2.1  &lt;&lt;&gt;&gt; example.com
+ ;; global options:  printcmd
+ ;; Got answer:
+ ;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 53000
+ ;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+ 
+ ;; QUESTION SECTION:
+ ;example.com.                   IN      A
+ 
+ ;; ANSWER SECTION:
+ example.com.            109859  IN      A       192.0.43.10
+ 
+ ;; <b>Query time: 10 msec</b>
+ ;; SERVER: 192.168.2.1#53(192.168.2.1)
+ ;; WHEN: Fri Jul 15 09:13:20 2011
+ ;; MSG SIZE  rcvd: 45
+</code></pre><p>Now, run the <i>exact</i> same 'dig' command again should result in something similar to the following:</p><pre><code> ; &lt;&lt;&gt;&gt; DiG 9.4.2-P2.1  &lt;&lt;&gt;&gt; example.com
+ ;; global options:  printcmd
+ ;; Got answer:
+ ;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 53000
+ ;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+ 
+ ;; QUESTION SECTION:
+ ;example.com.                   IN      A
+ 
+ ;; ANSWER SECTION:
+ example.com.            109859  IN      A       192.0.43.10
+ 
+ ;; <b>Query time: 1 msec</b>
+ ;; SERVER: 192.168.2.1#53(192.168.2.1)
+ ;; WHEN: Fri Jul 15 09:13:20 2011
+ ;; MSG SIZE  rcvd: 45
+</code></pre><p>You'll notice the query time is much faster the second time around; that's because the first time, the results were cached on the DNS server! Feel free to try this with several domains, they should all return similar speed-ups for query time!</p><p><b><u>Step Six, Configure Router and/or Computer to use your new DNS server:</u></b><br>Now that you have a working Caching-Only DNS Server, you are ready to setup your network to use as its main DNS server. It is best if you can configure your router to use this as the DNS; that way when a DHCP request is made, the router will tell the client to use your Caching-Only DNS Server for domain name queries. The settings to have your router use your Caching-Only DNS server are usually found under the LAN part of your routers configuration page. As there are many different brands of routers and the settings will vary between them, you will have to consult the documentation that came with your router; otherwise a quick Google search will usually do the trick!</p><p>You can also manually configure each computer on your network to use your Caching-Only DNS server; however this can take a while depending on how many computers you have on your network. I'm not going to cover the specifics on how to do this for each operating system, but the setting is usually under an advanced part of the network settings.</p></div><footer class="wrapper post__footer"><p class="post__last-updated">This article was updated on May 12, 2020</p><ul class="post__tag"><li><a href="https://fachinformatiker.github.io/fachinformatiker.github.io/homelab/">Homelab</a></li><li><a href="https://fachinformatiker.github.io/fachinformatiker.github.io/linux/">Linux</a></li><li><a href="https://fachinformatiker.github.io/fachinformatiker.github.io/raspberry-pi/">Raspberry Pi</a></li><li><a href="https://fachinformatiker.github.io/fachinformatiker.github.io/server/">Server</a></li><li><a href="https://fachinformatiker.github.io/fachinformatiker.github.io/tutorials/">Tutorials</a></li></ul><div class="post__share"></div><div class="post__bio bio"><div class="bio__info"><h3 class="bio__name"><a href="https://fachinformatiker.github.io/fachinformatiker.github.io/authors/patrick-szalewicz/" class="invert" rel="author">Patrick Szalewicz</a></h3></div></div></footer></article><nav class="post__nav"><div class="post__nav-inner"><div class="post__nav-prev"><svg width="1.041em" height="0.416em" aria-hidden="true"><use xlink:href="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/svg/svg-map.svg#arrow-prev"/></svg> <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/object-object.html" class="invert post__nav-link" rel="prev"><span>Previous</span> Untitled</a></div><div class="post__nav-next"><a href="https://fachinformatiker.github.io/fachinformatiker.github.io/how-can-i-have-my-own-public-dns-server-like-1111.html" class="invert post__nav-link" rel="next"><span>Next</span> How can I have my own Public DNS Server (like 1.1.1.1)? </a><svg width="1.041em" height="0.416em" aria-hidden="true"><use xlink:href="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/svg/svg-map.svg#arrow-next"/></svg></div></div></nav><div class="post__related related"><div class="wrapper"><h2 class="h5 related__title">You should also read:</h2><article class="related__item"><div class="feed__meta"><time datetime="2020-01-02T00:20" class="feed__date">January 2, 2020</time></div><h3 class="h1"><a href="https://fachinformatiker.github.io/fachinformatiker.github.io/build-your-own-dns-server-on-linux.html" class="invert">Build your own DNS server on Linux</a></h3></article><article class="related__item"><div class="feed__meta"><time datetime="2019-12-23T12:24" class="feed__date">December 23, 2019</time></div><h3 class="h1"><a href="https://fachinformatiker.github.io/fachinformatiker.github.io/debian-10-set-up-openvpn-server-in-5-minutes.html" class="invert">Debian 10 Set Up OpenVPN Server In 5 Minutes</a></h3></article><article class="related__item"><div class="feed__meta"><time datetime="2019-07-11T20:59" class="feed__date">July 11, 2019</time></div><h3 class="h1"><a href="https://fachinformatiker.github.io/fachinformatiker.github.io/how-can-i-have-my-own-public-dns-server-like-1111.html" class="invert">How can I have my own Public DNS Server (like 1.1.1.1)?</a></h3></article></div></div></main><footer class="footer"><div class="footer__copyright">Powered by <a href="https://getpublii.com" target="_blank" rel="nofollow noopener">Publii Static CMS</a></div><button class="footer__bttop js-footer__bttop" aria-label="Back to top"><svg><title>Back to top</title><use xlink:href="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/svg/svg-map.svg#toparrow"/></svg></button></footer></div><script>window.publiiThemeMenuConfig = {    
+        mobileMenuMode: 'sidebar',
+        animationSpeed: 300,
+        submenuWidth: 'auto',
+        doubleClickTime: 500,
+        mobileMenuExpandableSubmenus: true, 
+        relatedContainerForOverlayMenuSelector: '.top',
+   };</script><script defer="defer" src="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/js/scripts.min.js?v=205f40927e4a45297a0b266e50ad78d5"></script><script>var lazyFeaturedImage=function lazyFeaturedImage(){var b=document.querySelectorAll(".hero__image-img");for(var a=0;a<b.length;a++){var c=b[a];c.addEventListener("lazyloaded",function(f){var d=f.target.parentNode;d.classList.add("hero__image--overlay")})}};lazyFeaturedImage();</script></body></html>

