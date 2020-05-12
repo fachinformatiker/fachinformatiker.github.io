@@ -1,0 +1,583 @@
+<!doctype html><html amp lang="en"><head><meta charset="utf-8"><title>A Guide to Java Sockets - fachinformatiker.app</title><meta name="description" content="Neues zum Thema Technik, Medien, etc.
+Gerne bringe ich dir auch in meinen Tutorials, schriftlich wie auch audiovisuell, neues bei und erweitere dein Wissen."><link rel="canonical" href="https://fachinformatiker.github.io/fachinformatiker.github.io/a-guide-to-java-sockets.html"><meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1"><link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet" type="text/css"><script async custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"></script><script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script><script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script><script async custom-element="amp-video" src="https://cdn.ampproject.org/v0/amp-video-0.1.js"></script><script type="application/ld+json">{"@context":"http://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://fachinformatiker.github.io/fachinformatiker.github.io/amp/a-guide-to-java-sockets.html"},"headline":"A Guide to Java Sockets","datePublished":"2020-01-29T10:00","dateModified":"2020-05-12T08:44","description":"<h2 data-id=\"Overview\"><strong>1. Overview</strong></h2>\n<div id=\"Overview\" class=\"bd-anchor\"></div>\n<p>The term <em>socket </em><i>programming</i> refers to writing programs that execute across multiple computers in which the devices are all connected to each other using a network.</p>\n<p>There are two communication protocols that one can use for socket programming: <strong>User Datagram Protocol (UDP) and Transfer Control Protocol (TCP)</strong>.</p>\n<div class=\"code-block code-block-2\"></div>\n<p>The main difference between the two is that UDP is connectionless, meaning there is no session between the client and the server while TCP is connection-oriented, meaning an exclusive connection must first be established between client and server for communication to take place.</p>\n<p>This tutorial presents <strong>an introduction to sockets programming over TCP/IP</strong> networks and demonstrates how to write client/server applications in Java. UDP is not a mainstream protocol and as such may not be often encountered.</p>\n","author":{"@type":"Person","name":"Patrick Szalewicz"},"publisher":{"@type":"Organization","name":"Patrick Szalewicz"}}</script><style amp-custom>article,
+aside,
+footer,
+header,
+hgroup,
+main,
+nav,
+section {
+  display: block; }
+
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  margin: 0;
+  padding: 0; }
+
+li {
+  list-style: none; }
+
+amp-img {
+  max-width: 100%; }
+
+button,
+input,
+select,
+textarea {
+  font: inherit; }
+
+html {
+  font-size: 1rem; }
+
+body {
+  background: #f1f1f1;
+  color: #262626;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  line-height: 1.6; }
+
+a {
+  color:  #004965;
+  text-decoration: none;
+  -webkit-transition: all 0.12s linear 0s;
+  -o-transition: all 0.12s linear 0s;
+  transition: all 0.12s linear 0s; }
+
+a:hover {
+  color: #262626;
+  text-decoration: underline;
+  -webkit-text-decoration-skip: ink;
+  text-decoration-skip: ink; }
+
+a:active {
+  color: #262626; }
+
+a:focus {
+  outline: 2px dotted #004965; }
+
+figure,
+blockquote,
+p,
+ul,
+ol,
+dl,
+table,
+hr,
+fieldset {
+  margin-top: 1.6rem; }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #262626;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: 2.13333rem; }
+
+h1 {
+  font-size: 1.67583rem;
+  font-weight: normal; }
+
+h2 {
+  font-size: 1.4729rem; }
+
+h3 {
+  font-size: 1.29454rem; }
+
+h4 {
+  font-size: 1.13778rem; }
+
+h5 {
+  font-size: 1rem; }
+
+h6 {
+  font-size: 0.87891rem; }
+
+h2 + p,
+h3 + p,
+h4 + p,
+h5 + p,
+h6 + p {
+  margin-top: 0.8rem; }
+
+b,
+strong {
+  font-weight: 600; }
+
+blockquote {
+  color: #6c7175;
+  font-family: "Droid Serif", "Times", "Source Serif Pro", serif;
+  font-style: italic;
+  padding: 1.33333rem 0.53333rem 1.33333rem 3.2rem;
+  position: relative; }
+  blockquote:before {
+    display: block;
+    content: "\201C";
+    font-size: 4.41226rem;
+    position: absolute;
+    left: 0;
+    top: -12px;
+    color: rgba(108, 113, 117, 0.5); }
+  blockquote > :nth-child(1) {
+    margin-top: 0; }
+
+ul,
+ol {
+  margin-left: 2rem; }
+  ul > li,
+  ol > li {
+    list-style: inherit;
+    padding: 0 0 0.26667rem 0.26667rem; }
+
+dl dt {
+  color: #262626;
+  font-weight: 600; }
+
+code,
+pre {
+  background-color: #f1f1f1;
+  font-family: monospace; }
+
+pre {
+  margin: 1.6rem 0 0;
+  padding: 1.6rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto; }
+  pre > code {
+    color: #262626;
+    padding: 0; }
+
+code {
+  border-radius: 3px;
+  color: #262626;
+  padding: 0.26667rem 0.53333rem; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid #d4d4d4;
+  width: 100%;
+  overflow-x: auto;
+  vertical-align: top;
+  text-align: left;
+  white-space: nowrap; }
+  table th {
+    font-weight: 500;
+    padding: 0.53333rem 1.06667rem; }
+  table tr {
+    border-bottom: 1px solid #d4d4d4; }
+    table tr:nth-child(2n) {
+      background: #f1f1f1; }
+  table td {
+    padding: 0.53333rem 1.06667rem; }
+
+figcaption {
+  clear: both;
+  color: rgba(108, 113, 117, 0.6);
+  font-size: 0.82397rem;
+  margin: 0.8rem 0 0;
+  text-align: center; }
+
+sub,
+sup {
+  font-size: 65%; }
+
+hr {
+  border: 0;
+  height: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3); }
+
+.btn, [type=button],
+[type=submit],
+button {
+  background: #004965;
+  border: none;
+  border-radius: 2px;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 0.87891rem;
+  font-weight: 500;
+  line-height: 1.9;
+  padding: 0.53333rem 1.33333rem;
+  text-align: center;
+  text-decoration: none;
+  -webkit-transition: all .15s ease;
+  -o-transition: all .15s ease;
+  transition: all .15s ease;
+  width: auto; }
+  .btn:hover, [type=button]:hover,
+  [type=submit]:hover,
+  button:hover {
+    background: #262626;
+    color: #ffffff; }
+  .btn:focus, [type=button]:focus,
+  [type=submit]:focus,
+  button:focus {
+    outline: none; }
+  .btn-outline {
+    border: 1px solid #ddd;
+    background: #ffffff;
+    border-radius: 3px;
+    color: #262626; }
+
+[type=button],
+[type=submit],
+button {
+  text-transform: uppercase;
+  -webkit-appearance: none;
+  -moz-appearance: none; }
+
+.navbar {
+  background: #004965;
+  -webkit-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
+  line-height: 3;
+  max-height: 4rem; }
+  .navbar > div {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    text-align: left;
+    max-width: 700px;
+    margin: 0 auto; }
+  .navbar a {
+    color: #ffffff;
+    text-decoration: none; }
+  .navbar-sidebar-toggle {
+    left: 0;
+    position: relative;
+    text-indent: -99999rem; }
+    .navbar-sidebar-toggle:before {
+      content: "";
+      display: block;
+      border-top: 0.375rem double #ffffff;
+      border-bottom: 0.125rem solid #ffffff;
+      height: 0.125rem;
+      position: absolute;
+      text-indent: 0;
+      top: 50%;
+      width: 1.3rem;
+      -webkit-transform: translate(0px, -50%);
+      -ms-transform: translate(0px, -50%);
+      transform: translate(0px, -50%); }
+
+
+.logo {
+            display: inline-block;
+  font-weight: 600;
+  line-height: 1;
+            margin: 0 auto;
+            height: 2rem;
+            text-indent: -9999px;
+            width: 240px;vertical-align: middle;
+        }
+        .logo.logo-text {
+            line-height: 2;
+            text-align: center;
+            text-indent: 0;
+        }
+
+amp-sidebar {
+  background: #ffffff;
+  width: 240px; }
+  amp-sidebar > ul {
+    margin: 0.8rem 0 0;
+    padding: 0; }
+    amp-sidebar > ul ul {
+      border-left: 1px solid #d4d4d4;
+      margin: 0.53333rem 0 0; }
+    amp-sidebar > ul li {
+      color: #262626;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      list-style: none;
+      line-height: 1.4;
+      padding: 0.42667rem 1.06667rem; }
+      amp-sidebar > ul li li {
+        font-weight: normal;
+        padding: 0.26667rem 0 0.26667rem 1.06667rem; }
+    amp-sidebar > ul a,
+    amp-sidebar > ul a:visited {
+      color: #262626; }
+
+.bg-white {
+  background: #ffffff; }
+
+.wrap-page {
+  max-width: 700px;
+  margin: 0 auto; }
+
+@media all and (max-width: 43.6875em) {
+  .wrap-inner {
+    padding: 0 6%; } }
+
+.page-title {
+  background: #ffffff;
+  -webkit-box-shadow: 0 2px 3px rgba(38, 38, 38, 0.1);
+  box-shadow: 0 2px 3px rgba(38, 38, 38, 0.1);
+  margin-bottom: 0.8rem;
+  padding: 1.6rem 6%; }
+  .page-title > h1 {
+    margin: 0;
+    font-size: 1.29454rem; }
+  .page-title > p {
+    font-size: 0.87891rem;
+    color: #6c7175;
+    line-height: 1.3;
+    margin: 0.26667rem 0 0; }
+  .page-title-author {
+    border-radius: 50%;
+    float: left;
+    height: 2.5rem;
+    width: 2.5rem; }
+    .page-title-author + h1 {
+      margin-left: 3.5rem; }
+      .page-title-author + h1 + p {
+        margin-left: 3.5rem; }
+
+.card {
+  background: #ffffff;
+  -webkit-box-shadow: 0 2px 3px rgba(38, 38, 38, 0.1);
+  box-shadow: 0 2px 3px rgba(38, 38, 38, 0.1);
+  margin-bottom: 0.8rem;
+  padding-bottom: 1.06667rem; }
+
+  .card-meta {
+    border-top: 1px solid #d4d4d4;
+    color: rgba(108, 113, 117, 0.6);
+    font-size: 0.7242rem;
+    font-weight: 500;
+    margin-top: 1.06667rem;
+    padding-top: 1.06667rem;
+    text-transform: uppercase; }
+    .card-meta a + time:before {
+      content: "";
+      background: #d4d4d4;
+      display: inline-block;
+      height: 3px;
+      margin: 0 8px;
+      width: 3px;
+      vertical-align: middle;
+      border-radius: 50%; }
+  .card-text {
+    font-size: 0.9375rem;
+    overflow: hidden;
+    padding: 0 6%; }
+    .card-text h2 {
+      font-size: 1.13778rem; }
+
+.post {
+  margin-bottom: 2.13333rem; }
+  .post-featured-image {
+    margin-top: 0;
+    position: relative; }
+    .post-featured-image > figcaption {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 3px;
+      color: #ffffff;
+      position: absolute;
+      bottom: 0.8rem;
+      padding: 0 0.26667rem;
+      right: 6%; }
+  .post-header {
+    margin-bottom: 2.13333rem; }
+  .post-meta {
+    border-bottom: 1px solid #d4d4d4;
+    color: rgba(108, 113, 117, 0.6);
+    font-size: 0.7242rem;
+    font-weight: 500;
+    margin-top: 1.06667rem;
+    padding-bottom: 1.06667rem;
+    text-transform: uppercase; }
+    .post-meta a + time:before {
+      content: "";
+      background: #d4d4d4;
+      display: inline-block;
+      height: 3px;
+      margin: 0 8px;
+      width: 3px;
+      vertical-align: middle;
+      border-radius: 50%; }
+  .post-tag {
+    margin: 0; }
+    .post-tag > li {
+      display: inline-block;
+      padding: 0; }
+      .post-tag > li a {
+        background: #f1f1f1;
+        border-radius: 2px;
+        color: #6c7175;
+        font-size: 0.77248rem;
+        display: inline-block;
+        margin: 0 0.26667rem 0.26667rem 0;
+        padding: 0.26667rem 0.53333rem; }
+        .post-tag > li a:hover {
+          background: #004965;
+          color: #ffffff;
+          text-decoration: none; }
+  .post-share {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    margin-top: 1.6rem;
+    width: 100%; }
+    .post-share amp-social-share {
+      -webkit-box-flex: 1;
+      -ms-flex: 1 0 auto;
+      flex: 1 0 auto;
+      background-size: 24px; }
+  .post-scroll {
+    color: #ffffff;
+    background: #004965;
+    bottom: 10px;
+    border-radius: 50%;
+    border: none;
+    -webkit-box-shadow: 0 1px 1.5px 0 rgba(38, 38, 38, 0.12), 0 1px 1px 0 rgba(38, 38, 38, 0.24);
+    box-shadow: 0 1px 1.5px 0 rgba(38, 38, 38, 0.12), 0 1px 1px 0 rgba(38, 38, 38, 0.24);
+    font-size: 1.13778rem;
+    height: 46px;
+    opacity: 0;
+    outline: none;
+    position: fixed;
+    padding: 0;
+    right: 4%;
+    visibility: hidden;
+    width: 46px;
+    z-index: 9999; }
+    .post-scroll-marker {
+      height: 0px;
+      position: absolute;
+      top: 100px;
+      width: 0px; }
+        .post-pagination {
+    background: #f1f1f1;
+    -webkit-box-shadow: inset 0 2px 3px rgba(38, 38, 38, 0.1);
+    box-shadow: inset 0 2px 3px rgba(38, 38, 38, 0.1);
+    border-top: 1px solid #d4d4d4;
+    padding: 1.06667rem 0; }
+    .post-pagination > div {
+      line-height: 1.2;
+      padding: 0.53333rem 1.06667rem;
+      text-align: center; }
+      .post-pagination > div span {
+        display: block;
+        color: #6c7175;
+        font-size: 0.7242rem;
+        font-weight: 500;
+        margin-bottom: 0.26667rem;
+        text-transform: uppercase; }
+    .post-pagination-prev a:before {
+      content: "\2190";
+      margin-right: 0.26667rem; }
+    .post-pagination-next a:after {
+      content: "\2192";
+      margin-left: 0.26667rem; }
+
+aside {
+  margin: 1.6rem 0 0; }
+
+.align-left {
+  text-align: left; }
+
+.align-right {
+  text-align: right; }
+
+.align-center {
+  text-align: center; }
+
+.align-justify {
+  text-align: justify; }
+
+.msg {
+  border-left: 2px solid transparent;
+  padding: 1.06667rem 1.06667rem; }
+  .msg--highlight {
+    background-color: #fff8e6;
+    border-color: #e2ac4f; }
+  .msg--info {
+    background: rgba(45, 97, 201, 0.03);
+    border-color: #004965; }
+  .msg--success {
+    background: #f7fbf6;
+    border-color: #5ab44b; }
+  .msg--warning {
+    background: #fff3f3;
+    border-color: #c06367;
+    color: #a94442; }
+
+.dropcap:first-letter {
+  float: left;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-size: 2.16943rem;
+  line-height: 0.7;
+  margin-right: 0.53333rem;
+  padding: 0.53333rem 0.53333rem 0.53333rem 0; }
+
+.pagination {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  margin: 0.8rem 0; }
+  .pagination > a {
+    padding-left: 0;
+    padding-right: 0;
+    width: 49%; }
+  .pagination-right {
+    margin-left: auto; }
+
+.bottom {
+  background: #004965;
+  color: #ffffff;
+  padding: 1.06667rem 4%;
+  text-align: center; }</style><style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript><script async src="https://cdn.ampproject.org/v0.js"></script><script custom-element="amp-animation" src="https://cdn.ampproject.org/v0/amp-animation-0.1.js" async></script><script custom-element="amp-position-observer" src="https://cdn.ampproject.org/v0/amp-position-observer-0.1.js" async></script></head><body class="bg-white"><nav class="navbar wrap-inner" id="top"><div><a on="tap:navbar-sidebar.toggle" class="navbar-sidebar-toggle" title="Menu">Menu</a> <a class="logo logo-text" href="https://fachinformatiker.github.io/fachinformatiker.github.io/amp/">fachinformatiker.app</a></div></nav><main class="wrap-page"><article class="post"><div class="wrap-inner"><header class="post-header"><h1>A Guide to Java Sockets</h1><p class="post-meta">By <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/amp/authors/patrick-szalewicz/" rel="nofollow" title="Patrick Szalewicz">Patrick Szalewicz</a> <time datetime="2020-01-29T10:00">January 29, 2020</time></p></header><h2 data-id="Overview"><strong>1. Overview</strong></h2><div id="Overview" class="bd-anchor"></div><p>The term <em>socket </em><i>programming</i> refers to writing programs that execute across multiple computers in which the devices are all connected to each other using a network.</p><p>There are two communication protocols that one can use for socket programming: <strong>User Datagram Protocol (UDP) and Transfer Control Protocol (TCP)</strong>.</p><div class="code-block code-block-2"></div><p>The main difference between the two is that UDP is connectionless, meaning there is no session between the client and the server while TCP is connection-oriented, meaning an exclusive connection must first be established between client and server for communication to take place.</p><p>This tutorial presents <strong>an introduction to sockets programming over TCP/IP</strong> networks and demonstrates how to write client/server applications in Java. UDP is not a mainstream protocol and as such may not be often encountered.</p><h2 data-id="Setup"><strong>2. Project Setup</strong></h2><div id="Setup" class="bd-anchor"></div><p>Java provides a collection of classes and interfaces that take care of low-level communication details between the client and the server.</p><p>These are mostly contained in the <em>java.net</em> package, so we need to make the following import:</p><div><div id="highlighter_526638" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>import</code> <code>java.net.*;</code></div></div></td></tr></tbody></table></div></div><p>We also need the <em>java.io</em> package which gives us input and output streams to write to and read from while communicating:</p><div><div id="highlighter_975125" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>import</code> <code>java.io.*;</code></div></div></td></tr></tbody></table></div></div><p>For the sake of simplicity, we'll run our client and server programs on the same computer. If we were to execute them on different networked computers, the only thing that would change is the IP address, in this case, we will use <em>localhost</em> on <em>127.0.0.1</em>.</p><h2 data-id="Example"><strong>3. Simple Example</strong></h2><div id="Example" class="bd-anchor"></div><p>Let's get our hands dirty with the most <strong>basic of examples involving a client and a server</strong>. It's going to be a two-way communication application where the client greets the server and the server responds.</p><p>Let's create the server application in a class called <em>GreetServer.java</em> with the following code.</p><p>We include the <em>main</em> method and the global variables to draw attention to how we'll be running all servers in this article. In the rest of the examples in the articles, we'll omit this kind of more repetitive code:</p><div><div id="highlighter_471601" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div class="line number21 index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div class="line number23 index22 alt2">23</div><div class="line number24 index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div class="line number26 index25 alt1">26</div><div class="line number27 index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div class="line number29 index28 alt2">29</div><div class="line number30 index29 alt1">30</div><div class="line number31 index30 alt2">31</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>public</code> <code>class</code> <code>GreetServer {</code></div><div class="line number2 index1 alt1"><code>    </code><code>private</code> <code>ServerSocket serverSocket;</code></div><div class="line number3 index2 alt2"><code>    </code><code>private</code> <code>Socket clientSocket;</code></div><div class="line number4 index3 alt1"><code>    </code><code>private</code> <code>PrintWriter out;</code></div><div class="line number5 index4 alt2"><code>    </code><code>private</code> <code>BufferedReader in;</code></div><div class="line number6 index5 alt1"></div><div class="line number7 index6 alt2"><code>    </code><code>public</code> <code>void</code> <code>start(</code><code>int</code> <code>port) {</code></div><div class="line number8 index7 alt1"><code>        </code><code>serverSocket =</code><code>new</code> <code>ServerSocket(port);</code></div><div class="line number9 index8 alt2"><code>        </code><code>clientSocket = serverSocket.accept();</code></div><div class="line number10 index9 alt1"><code>        </code><code>out =</code><code>new</code> <code>PrintWriter(clientSocket.getOutputStream(),</code><code>true</code><code>);</code></div><div class="line number11 index10 alt2"><code>        </code><code>in =</code><code>new</code> <code>BufferedReader(</code><code>new</code> <code>InputStreamReader(clientSocket.getInputStream()));</code></div><div class="line number12 index11 alt1"><code>        </code><code>String greeting = in.readLine();</code></div><div class="line number13 index12 alt2"><code>            </code><code>if</code> <code>(</code><code>"hello server"</code><code>.equals(greeting)) {</code></div><div class="line number14 index13 alt1"><code>                </code><code>out.println(</code><code>"hello client"</code><code>);</code></div><div class="line number15 index14 alt2"><code>            </code><code>}</code></div><div class="line number16 index15 alt1"><code>            </code><code>else</code> <code>{</code></div><div class="line number17 index16 alt2"><code>                </code><code>out.println(</code><code>"unrecognised greeting"</code><code>);</code></div><div class="line number18 index17 alt1"><code>            </code><code>}</code></div><div class="line number19 index18 alt2"><code>    </code><code>}</code></div><div class="line number20 index19 alt1"></div><div class="line number21 index20 alt2"><code>    </code><code>public</code> <code>void</code> <code>stop() {</code></div><div class="line number22 index21 alt1"><code>        </code><code>in.close();</code></div><div class="line number23 index22 alt2"><code>        </code><code>out.close();</code></div><div class="line number24 index23 alt1"><code>        </code><code>clientSocket.close();</code></div><div class="line number25 index24 alt2"><code>        </code><code>serverSocket.close();</code></div><div class="line number26 index25 alt1"><code>    </code><code>}</code></div><div class="line number27 index26 alt2"><code>    </code><code>public</code> <code>static</code> <code>void</code> <code>main(String[] args) {</code></div><div class="line number28 index27 alt1"><code>        </code><code>GreetServer server=</code><code>new</code> <code>GreetServer();</code></div><div class="line number29 index28 alt2"><code>        </code><code>server.start(</code><code>6666</code><code>);</code></div><div class="line number30 index29 alt1"><code>    </code><code>}</code></div><div class="line number31 index30 alt2"><code>}</code></div></div></td></tr></tbody></table></div></div><p>Let's also create a client called <em>GreetClient.java</em> with this code:</p><div class="code-block code-block-3"></div><div><div id="highlighter_58220" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div class="line number21 index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div class="line number23 index22 alt2">23</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>public</code> <code>class</code> <code>GreetClient {</code></div><div class="line number2 index1 alt1"><code>    </code><code>private</code> <code>Socket clientSocket;</code></div><div class="line number3 index2 alt2"><code>    </code><code>private</code> <code>PrintWriter out;</code></div><div class="line number4 index3 alt1"><code>    </code><code>private</code> <code>BufferedReader in;</code></div><div class="line number5 index4 alt2"></div><div class="line number6 index5 alt1"><code>    </code><code>public</code> <code>void</code> <code>startConnection(String ip,</code><code>int</code> <code>port) {</code></div><div class="line number7 index6 alt2"><code>        </code><code>clientSocket =</code><code>new</code> <code>Socket(ip, port);</code></div><div class="line number8 index7 alt1"><code>        </code><code>out =</code><code>new</code> <code>PrintWriter(clientSocket.getOutputStream(),</code><code>true</code><code>);</code></div><div class="line number9 index8 alt2"><code>        </code><code>in =</code><code>new</code> <code>BufferedReader(</code><code>new</code> <code>InputStreamReader(clientSocket.getInputStream()));</code></div><div class="line number10 index9 alt1"><code>    </code><code>}</code></div><div class="line number11 index10 alt2"></div><div class="line number12 index11 alt1"><code>    </code><code>public</code> <code>String sendMessage(String msg) {</code></div><div class="line number13 index12 alt2"><code>        </code><code>out.println(msg);</code></div><div class="line number14 index13 alt1"><code>        </code><code>String resp = in.readLine();</code></div><div class="line number15 index14 alt2"><code>        </code><code>return</code> <code>resp;</code></div><div class="line number16 index15 alt1"><code>    </code><code>}</code></div><div class="line number17 index16 alt2"></div><div class="line number18 index17 alt1"><code>    </code><code>public</code> <code>void</code> <code>stopConnection() {</code></div><div class="line number19 index18 alt2"><code>        </code><code>in.close();</code></div><div class="line number20 index19 alt1"><code>        </code><code>out.close();</code></div><div class="line number21 index20 alt2"><code>        </code><code>clientSocket.close();</code></div><div class="line number22 index21 alt1"><code>    </code><code>}</code></div><div class="line number23 index22 alt2"><code>}</code></div></div></td></tr></tbody></table></div></div><p><strong>Let's start the server;</strong> in your IDE you do this by simply running it as a Java application.</p><p>And now let's send a greeting to the server using a unit test, which confirms that the server actually sends a greeting in response:</p><div><div id="highlighter_378270" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>@Test</code></div><div class="line number2 index1 alt1"><code>public</code> <code>void</code> <code>givenGreetingClient_whenServerRespondsWhenStarted_thenCorrect() {</code></div><div class="line number3 index2 alt2"><code>    </code><code>GreetClient client =</code><code>new</code> <code>GreetClient();</code></div><div class="line number4 index3 alt1"><code>    </code><code>client.startConnection(</code><code>"127.0.0.1"</code><code>,</code><code>6666</code><code>);</code></div><div class="line number5 index4 alt2"><code>    </code><code>String response = client.sendMessage(</code><code>"hello server"</code><code>);</code></div><div class="line number6 index5 alt1"><code>    </code><code>assertEquals(</code><code>"hello client"</code><code>, response);</code></div><div class="line number7 index6 alt2"><code>}</code></div></div></td></tr></tbody></table></div></div><p>Don't worry if you don't entirely understand what is happening here, as this example is meant to give us a feel of what to expect later on in the article.</p><p>In the following sections, we will dissect <strong>socket communication</strong> using this simple example and dive deeper into the details with more examples.</p><h2 data-id="Work"><strong>4. How Sockets Work</strong></h2><div id="Work" class="bd-anchor"></div><p>We will use the above example to step through different parts of this section.</p><p>By definition, a <em>socket</em> is one endpoint of a two-way communication link between two programs running on different computers on a network. A socket is bound to a port number so that the transport layer can identify the application that data is destined to be sent to.</p><h3 data-id="1-the-server"><strong>4.1. The Server</strong></h3><div id="1-the-server" class="bd-anchor"></div><p>Usually, a server runs on a specific computer on the network and has a socket that is bound to a specific port number. In our case, we use the same computer as the client and started the server on port <em>6666</em>:</p><div><div id="highlighter_497821" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>ServerSocket serverSocket =</code><code>new</code> <code>ServerSocket(</code><code>6666</code><code>);</code></div></div></td></tr></tbody></table></div></div><p>The server just waits, listening to the socket for a client to make a connection request. This happens in the next step:</p><div><div id="highlighter_469893" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>Socket clientSocket = serverSocket.accept();</code></div></div></td></tr></tbody></table></div></div><p>When the server code encounters the <em>accept</em> method, it blocks until a client makes a connection request to it.</p><p>If everything goes well, the server <em>accepts</em> the connection. Upon acceptance, the server gets a new socket, <em>clientSocket</em>, bound to the same local port, <em>6666</em>, and also has its remote endpoint set to the address and port of the client.</p><p>At this point, the new <em>Socket</em> object puts the server in direct connection with the client, we can then access the output and input streams to write and receive messages to and from the client respectively:</p><div class="code-block code-block-4"></div><div><div id="highlighter_865828" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>PrintWriter out =</code><code>new</code> <code>PrintWriter(clientSocket.getOutputStream(),</code><code>true</code><code>);</code></div><div class="line number2 index1 alt1"><code>BufferedReader in =</code><code>new</code> <code>BufferedReader(</code><code>new</code> <code>InputStreamReader(clientSocket.getInputStream()));</code></div></div></td></tr></tbody></table></div></div><p>From here onwards, the server is capable of exchanging messages with the client endlessly until the socket is closed with its streams.</p><p>However, in our example the server can only send a greeting response before it closes the connection, this means that if we ran our test again, the connection would be refused.</p><p>To allow continuity in communication, we will have to read from the input stream inside a <em>while</em> loop and only exit when the client sends a termination request, we will see this in action in the following section.</p><p>For every new client, the server needs a new socket returned by the <em>accept</em> call. The <em>serverSocket </em>is used to continue to listen for connection requests while tending to the needs of the connected clients. We have not allowed for this yet in our first example.</p><h3 data-id="2-the-client"><strong>4.2. The Client</strong></h3><div id="2-the-client" class="bd-anchor"></div><p>The client must know the hostname or IP of the machine on which the server is running and the port number on which the server is listening.</p><p>To make a connection request, the client tries to rendezvous with the server on the server's machine and port:</p><div><div id="highlighter_932479" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>Socket clientSocket =</code><code>new</code> <code>Socket(</code><code>"127.0.0.1"</code><code>,</code><code>6666</code><code>);</code></div></div></td></tr></tbody></table></div></div><p>The client also needs to identify itself to the server so it binds to a local port number, assigned by the system, that it will use during this connection. We don't deal with this ourselves.</p><p>The above constructor only creates a new socket when the server has <em>accepted</em> the connection, otherwise, we will get a connection refused exception. When successfully created we can then obtain input and output streams from it to communicate with the server:</p><div><div id="highlighter_657840" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>PrintWriter out =</code><code>new</code> <code>PrintWriter(clientSocket.getOutputStream(),</code><code>true</code><code>);</code></div><div class="line number2 index1 alt1"><code>BufferedReader in =</code><code>new</code> <code>BufferedReader(</code><code>new</code> <code>InputStreamReader(clientSocket.getInputStream()));</code></div></div></td></tr></tbody></table></div></div><p>The input stream of the client is connected to the output stream of the server, just like the input stream of the server is connected to the output stream of the client.</p><h2 data-id="Communication"><strong>5. Continuous Communication</strong></h2><div id="Communication" class="bd-anchor"></div><p>Our current server blocks until a client connects to it and then blocks again to listen to a message from the client, after the single message, it closes the connection because we have not dealt with continuity.</p><p>So it is only helpful in ping requests, but imagine we would like to implement a chat server, continuous back and forth communication between server and client would definitely be required.</p><div class="code-block code-block-5"></div><p>We will have to create a while loop to continuously observe the input stream of the server for incoming messages.</p><p>Let's create a new server called <em>EchoServer.java</em> whose sole purpose is to echo back whatever messages it receives from clients:</p><div><div id="highlighter_603158" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>public</code> <code>class</code> <code>EchoServer {</code></div><div class="line number2 index1 alt1"><code>    </code><code>public</code> <code>void</code> <code>start(</code><code>int</code> <code>port) {</code></div><div class="line number3 index2 alt2"><code>        </code><code>serverSocket =</code><code>new</code> <code>ServerSocket(port);</code></div><div class="line number4 index3 alt1"><code>        </code><code>clientSocket = serverSocket.accept();</code></div><div class="line number5 index4 alt2"><code>        </code><code>out =</code><code>new</code> <code>PrintWriter(clientSocket.getOutputStream(),</code><code>true</code><code>);</code></div><div class="line number6 index5 alt1"><code>        </code><code>in =</code><code>new</code> <code>BufferedReader(</code><code>new</code> <code>InputStreamReader(clientSocket.getInputStream()));</code></div><div class="line number7 index6 alt2"><code>        </code></div><div class="line number8 index7 alt1"><code>        </code><code>String inputLine;</code></div><div class="line number9 index8 alt2"><code>        </code><code>while</code> <code>((inputLine = in.readLine()) !=</code><code>null</code><code>) {</code></div><div class="line number10 index9 alt1"><code>        </code><code>if</code> <code>(</code><code>"."</code><code>.equals(inputLine)) {</code></div><div class="line number11 index10 alt2"><code>            </code><code>out.println(</code><code>"good bye"</code><code>);</code></div><div class="line number12 index11 alt1"><code>            </code><code>break</code><code>;</code></div><div class="line number13 index12 alt2"><code>         </code><code>}</code></div><div class="line number14 index13 alt1"><code>         </code><code>out.println(inputLine);</code></div><div class="line number15 index14 alt2"><code>    </code><code>}</code></div><div class="line number16 index15 alt1"><code>}</code></div></div></td></tr></tbody></table></div></div><p>Notice that we have added a termination condition where the while loop exits when we receive a period character.</p><p>We will start <em>EchoServer</em> using the main method just as we did for the <em>GreetServer</em>. This time, we start it on another port such as <em>4444</em> to avoid confusion.</p><p>The <em>EchoClient</em> is similar to <em>GreetClient</em>, so we can duplicate the code. We are separating them for clarity.</p><p>In a different test class, we shall create a test to show that multiple requests to the <em>EchoServer</em> will be served without the server closing the socket. This is true as long as we are sending requests from the same client.</p><p>Dealing with multiple clients is a different case, which we shall see in a subsequent section.</p><p>Let's create a <em>setup</em> method to initiate a connection with the server:</p><div><div id="highlighter_348141" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>@Before</code></div><div class="line number2 index1 alt1"><code>public</code> <code>void</code> <code>setup() {</code></div><div class="line number3 index2 alt2"><code>    </code><code>client =</code><code>new</code> <code>EchoClient();</code></div><div class="line number4 index3 alt1"><code>    </code><code>client.startConnection(</code><code>"127.0.0.1"</code><code>,</code><code>4444</code><code>);</code></div><div class="line number5 index4 alt2"><code>}</code></div></div></td></tr></tbody></table></div></div><p>We will equally create a <em>tearDown</em> method to release all our resources, this is best practice for every case where we use network resources:</p><div><div id="highlighter_97601" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>@After</code></div><div class="line number2 index1 alt1"><code>public</code> <code>void</code> <code>tearDown() {</code></div><div class="line number3 index2 alt2"><code>    </code><code>client.stopConnection();</code></div><div class="line number4 index3 alt1"><code>}</code></div></div></td></tr></tbody></table></div></div><p>Let's then test our echo server with a few requests:</p><div><div id="highlighter_447157" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>@Test</code></div><div class="line number2 index1 alt1"><code>public</code> <code>void</code> <code>givenClient_whenServerEchosMessage_thenCorrect() {</code></div><div class="line number3 index2 alt2"><code>    </code><code>String resp1 = client.sendMessage(</code><code>"hello"</code><code>);</code></div><div class="line number4 index3 alt1"><code>    </code><code>String resp2 = client.sendMessage(</code><code>"world"</code><code>);</code></div><div class="line number5 index4 alt2"><code>    </code><code>String resp3 = client.sendMessage(</code><code>"!"</code><code>);</code></div><div class="line number6 index5 alt1"><code>    </code><code>String resp4 = client.sendMessage(</code><code>"."</code><code>);</code></div><div class="line number7 index6 alt2"><code>    </code></div><div class="line number8 index7 alt1"><code>    </code><code>assertEquals(</code><code>"hello"</code><code>, resp1);</code></div><div class="line number9 index8 alt2"><code>    </code><code>assertEquals(</code><code>"world"</code><code>, resp2);</code></div><div class="line number10 index9 alt1"><code>    </code><code>assertEquals(</code><code>"!"</code><code>, resp3);</code></div><div class="line number11 index10 alt2"><code>    </code><code>assertEquals(</code><code>"good bye"</code><code>, resp4);</code></div><div class="line number12 index11 alt1"><code>}</code></div></div></td></tr></tbody></table></div></div><p>This is an improvement over the initial example, where we would only communicate once before the server closed our connection; <strong>now we send a termination signal to tell the server when we're done with the session</strong>.</p><div class="code-block code-block-6"></div><h2 data-id="Multiple"><strong>6. Server with Multiple Clients</strong></h2><div id="Multiple" class="bd-anchor"></div><p>Much as the previous example was an improvement over the first one, it is still not that great a solution. A server must have the capacity to service many clients and many requests simultaneously.</p><p><strong>Handling multiple clients is what we are going to cover in this section.</strong></p><p>Another feature we will see here is that the same client could disconnect and reconnect again, without getting a connection refused exception or a connection reset on the server. Previously we were not able to do this.</p><p>This means that our server is going to be more robust and resilient across multiple requests from multiple clients.</p><p>How we will do this is to create a new socket for every new client and service that client's requests on a different thread. The number of clients being served simultaneously will equal the number of threads running.</p><p>The main thread will be running a while loop as it listens for new connections.</p><p>Enough talk, let's create another server called <em>EchoMultiServer.java.</em> Inside it, we will create a handler thread class to manage each client's communications on its socket:</p><div><div id="highlighter_135518" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div class="line number21 index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div class="line number23 index22 alt2">23</div><div class="line number24 index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div class="line number26 index25 alt1">26</div><div class="line number27 index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div class="line number29 index28 alt2">29</div><div class="line number30 index29 alt1">30</div><div class="line number31 index30 alt2">31</div><div class="line number32 index31 alt1">32</div><div class="line number33 index32 alt2">33</div><div class="line number34 index33 alt1">34</div><div class="line number35 index34 alt2">35</div><div class="line number36 index35 alt1">36</div><div class="line number37 index36 alt2">37</div><div class="line number38 index37 alt1">38</div><div class="line number39 index38 alt2">39</div><div class="line number40 index39 alt1">40</div><div class="line number41 index40 alt2">41</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>public</code> <code>class</code> <code>EchoMultiServer {</code></div><div class="line number2 index1 alt1"><code>    </code><code>private</code> <code>ServerSocket serverSocket;</code></div><div class="line number3 index2 alt2"></div><div class="line number4 index3 alt1"><code>    </code><code>public</code> <code>void</code> <code>start(</code><code>int</code> <code>port) {</code></div><div class="line number5 index4 alt2"><code>        </code><code>serverSocket =</code><code>new</code> <code>ServerSocket(port);</code></div><div class="line number6 index5 alt1"><code>        </code><code>while</code> <code>(</code><code>true</code><code>)</code></div><div class="line number7 index6 alt2"><code>            </code><code>new</code> <code>EchoClientHandler(serverSocket.accept()).start();</code></div><div class="line number8 index7 alt1"><code>    </code><code>}</code></div><div class="line number9 index8 alt2"></div><div class="line number10 index9 alt1"><code>    </code><code>public</code> <code>void</code> <code>stop() {</code></div><div class="line number11 index10 alt2"><code>        </code><code>serverSocket.close();</code></div><div class="line number12 index11 alt1"><code>    </code><code>}</code></div><div class="line number13 index12 alt2"></div><div class="line number14 index13 alt1"><code>    </code><code>private</code> <code>static</code> <code>class</code> <code>EchoClientHandler</code><code>extends</code> <code>Thread {</code></div><div class="line number15 index14 alt2"><code>        </code><code>private</code> <code>Socket clientSocket;</code></div><div class="line number16 index15 alt1"><code>        </code><code>private</code> <code>PrintWriter out;</code></div><div class="line number17 index16 alt2"><code>        </code><code>private</code> <code>BufferedReader in;</code></div><div class="line number18 index17 alt1"></div><div class="line number19 index18 alt2"><code>        </code><code>public</code> <code>EchoClientHandler(Socket socket) {</code></div><div class="line number20 index19 alt1"><code>            </code><code>this</code><code>.clientSocket = socket;</code></div><div class="line number21 index20 alt2"><code>        </code><code>}</code></div><div class="line number22 index21 alt1"></div><div class="line number23 index22 alt2"><code>        </code><code>public</code> <code>void</code> <code>run() {</code></div><div class="line number24 index23 alt1"><code>            </code><code>out =</code><code>new</code> <code>PrintWriter(clientSocket.getOutputStream(),</code><code>true</code><code>);</code></div><div class="line number25 index24 alt2"><code>            </code><code>in =</code><code>new</code> <code>BufferedReader(</code></div><div class="line number26 index25 alt1"><code>              </code><code>new</code> <code>InputStreamReader(clientSocket.getInputStream()));</code></div><div class="line number27 index26 alt2"><code>            </code></div><div class="line number28 index27 alt1"><code>            </code><code>String inputLine;</code></div><div class="line number29 index28 alt2"><code>            </code><code>while</code> <code>((inputLine = in.readLine()) !=</code><code>null</code><code>) {</code></div><div class="line number30 index29 alt1"><code>                </code><code>if</code> <code>(</code><code>"."</code><code>.equals(inputLine)) {</code></div><div class="line number31 index30 alt2"><code>                    </code><code>out.println(</code><code>"bye"</code><code>);</code></div><div class="line number32 index31 alt1"><code>                    </code><code>break</code><code>;</code></div><div class="line number33 index32 alt2"><code>                </code><code>}</code></div><div class="line number34 index33 alt1"><code>                </code><code>out.println(inputLine);</code></div><div class="line number35 index34 alt2"><code>            </code><code>}</code></div><div class="line number36 index35 alt1"></div><div class="line number37 index36 alt2"><code>            </code><code>in.close();</code></div><div class="line number38 index37 alt1"><code>            </code><code>out.close();</code></div><div class="line number39 index38 alt2"><code>            </code><code>clientSocket.close();</code></div><div class="line number40 index39 alt1"><code>    </code><code>}</code></div><div class="line number41 index40 alt2"><code>}</code></div></div></td></tr></tbody></table></div></div><p>Notice that we now call <em>accept</em> inside a <em>while</em> loop. Every time the <em>while</em> loop is executed, it blocks on the <em>accept</em> call until a new client connects, then the handler thread, <em>EchoClientHandler</em>, is created for this client.</p><p>What happens inside the thread is what we previously did in the <em>EchoServer</em> where we handled only a single client. So the <em>EchoMultiServer</em> delegates this work to <em>EchoClientHandler</em> so that it can keep listening for more clients in the <em>while</em> loop.</p><p>We will still use <em>EchoClient</em> to test the server, this time we will create multiple clients each sending and receiving multiple messages from the server.</p><p>Let's start our server using its main method on port <em>5555</em>.</p><div class="code-block code-block-7"></div><p>For clarity, we will still put tests in a new suite:</p><div><div id="highlighter_453104" class="syntaxhighlighter notranslate java"><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div class="line number21 index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div class="line number23 index22 alt2">23</div><div class="line number24 index23 alt1">24</div><div class="line number25 index24 alt2">25</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code>@Test</code></div><div class="line number2 index1 alt1"><code>public</code> <code>void</code> <code>givenClient1_whenServerResponds_thenCorrect() {</code></div><div class="line number3 index2 alt2"><code>    </code><code>EchoClient client1 =</code><code>new</code> <code>EchoClient();</code></div><div class="line number4 index3 alt1"><code>    </code><code>client1.startConnection(</code><code>"127.0.0.1"</code><code>,</code><code>5555</code><code>);</code></div><div class="line number5 index4 alt2"><code>    </code><code>String msg1 = client1.sendMessage(</code><code>"hello"</code><code>);</code></div><div class="line number6 index5 alt1"><code>    </code><code>String msg2 = client1.sendMessage(</code><code>"world"</code><code>);</code></div><div class="line number7 index6 alt2"><code>    </code><code>String terminate = client1.sendMessage(</code><code>"."</code><code>);</code></div><div class="line number8 index7 alt1"><code>    </code></div><div class="line number9 index8 alt2"><code>    </code><code>assertEquals(msg1,</code><code>"hello"</code><code>);</code></div><div class="line number10 index9 alt1"><code>    </code><code>assertEquals(msg2,</code><code>"world"</code><code>);</code></div><div class="line number11 index10 alt2"><code>    </code><code>assertEquals(terminate,</code><code>"bye"</code><code>);</code></div><div class="line number12 index11 alt1"><code>}</code></div><div class="line number13 index12 alt2"></div><div class="line number14 index13 alt1"><code>@Test</code></div><div class="line number15 index14 alt2"><code>public</code> <code>void</code> <code>givenClient2_whenServerResponds_thenCorrect() {</code></div><div class="line number16 index15 alt1"><code>    </code><code>EchoClient client2 =</code><code>new</code> <code>EchoClient();</code></div><div class="line number17 index16 alt2"><code>    </code><code>client2.startConnection(</code><code>"127.0.0.1"</code><code>,</code><code>5555</code><code>);</code></div><div class="line number18 index17 alt1"><code>    </code><code>String msg1 = client2.sendMessage(</code><code>"hello"</code><code>);</code></div><div class="line number19 index18 alt2"><code>    </code><code>String msg2 = client2.sendMessage(</code><code>"world"</code><code>);</code></div><div class="line number20 index19 alt1"><code>    </code><code>String terminate = client2.sendMessage(</code><code>"."</code><code>);</code></div><div class="line number21 index20 alt2"><code>    </code></div><div class="line number22 index21 alt1"><code>    </code><code>assertEquals(msg1,</code><code>"hello"</code><code>);</code></div><div class="line number23 index22 alt2"><code>    </code><code>assertEquals(msg2,</code><code>"world"</code><code>);</code></div><div class="line number24 index23 alt1"><code>    </code><code>assertEquals(terminate,</code><code>"bye"</code><code>);</code></div><div class="line number25 index24 alt2"><code>}</code></div></div></td></tr></tbody></table></div></div><p>We could create as many of these test cases as we please, each spawning a new client and the server will serve all of them.</p><h2 data-id="Conclusion"><strong>7. Conclusion</strong></h2><div id="Conclusion" class="bd-anchor"></div><p>In this tutorial, we've focused on <strong>an introduction to sockets programming over TCP/IP</strong> and wrote a simple Client/Server application in Java.</p><aside><div class="post-share"><amp-social-share type="system" width="40" height="40" data-param-text="A Guide to Java Sockets"></amp-social-share><amp-social-share type="twitter" width="40" height="40" data-param-text="A Guide to Java Sockets" data-param-url="https://fachinformatiker.github.io/fachinformatiker.github.io/amp/a-guide-to-java-sockets.html"></amp-social-share><amp-social-share type="whatsapp" width="40" height="40" data-param-text="A Guide to Java Sockets"></amp-social-share></div></aside></div></article><nav class="post-pagination wrap-inner"><div class="post-pagination-prev"><span>Previous Post</span> <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/amp/how-to-add-and-delete-users.html">How to Add and Delete Users</a></div><div class="post-pagination-next"><span>Next Post</span> <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/amp/how-to-change-user-password.html">How to Change User Password</a></div></nav></main><amp-animation id="showAnim" layout="nodisplay"><script type="application/json">{
+                    "duration": "200ms",
+                    "fill": "both",
+                    "iterations": "1",
+                    "direction": "alternate",
+                    "animations": [{
+                        "selector": ".post-scroll",
+                        "keyframes": [{
+                            "opacity": "1",
+                            "visibility": "visible",
+                            "transform": "scale(1)"
+                        }]
+                    }]
+                }</script></amp-animation><amp-animation id="hideAnim" layout="nodisplay"><script type="application/json">{
+                    "duration": "200ms",
+                    "fill": "both",
+                    "iterations": "1",
+                    "direction": "alternate",
+                    "animations": [{
+                        "selector": ".post-scroll",
+                        "keyframes": [{
+                            "opacity": "0",
+                            "visibility": "hidden",
+                            "transform": "scale(0.1)"
+                        }]
+                    }]
+                }</script></amp-animation><div class="post-scroll-marker"><amp-position-observer on="enter:hideAnim.start; exit:showAnim.start" layout="nodisplay"></amp-position-observer></div><button class="post-scroll" on="tap:top.scrollTo(duration=200)">&#8593;</button><footer class="bottom">Powered by Publii</footer><amp-sidebar id="navbar-sidebar" layout="nodisplay"><ul></ul></amp-sidebar></body></html>

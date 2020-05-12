@@ -1,0 +1,594 @@
+<!doctype html><html amp lang="en"><head><meta charset="utf-8"><title>SSH Command - fachinformatiker.app</title><meta name="description" content="Neues zum Thema Technik, Medien, etc.
+Gerne bringe ich dir auch in meinen Tutorials, schriftlich wie auch audiovisuell, neues bei und erweitere dein Wissen."><link rel="canonical" href="https://fachinformatiker.github.io/fachinformatiker.github.io/ssh-command.html"><meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1"><link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet" type="text/css"><script async custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"></script><script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"></script><script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script><script async custom-element="amp-video" src="https://cdn.ampproject.org/v0/amp-video-0.1.js"></script><script type="application/ld+json">{"@context":"http://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://fachinformatiker.github.io/fachinformatiker.github.io/amp/ssh-command.html"},"headline":"SSH Command","datePublished":"2020-01-22T12:54","dateModified":"2020-05-12T08:44","description":"<p>Secure Shell (SSH) is a cryptographic network protocol used for an encrypted connection between a client and a server. The ssh client creates a secure connection to the SSH server on a remote machine. The encrypted connection can be used to execute commands on the server, X11 tunneling, port forwarding, and more.</p>\n<p>There are a number of SSH clients available both free and commercial, with OpenSSH being the most widely used client. It is available on all major platforms, including Linux, OpenBSD, Windows, macOS and others.<span id=\"ezoic-pub-ad-placeholder-158\" class=\"ezoic-adpicker-ad\"></span></p>\n<p>In this article, we will explain how to use the OpenSSH command-line client (<code>ssh</code>) to login to a remote machine and run commands or perform other operations.<br />\n","author":{"@type":"Person","name":"Patrick Szalewicz"},"publisher":{"@type":"Organization","name":"Patrick Szalewicz"}}</script><style amp-custom>article,
+aside,
+footer,
+header,
+hgroup,
+main,
+nav,
+section {
+  display: block; }
+
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  margin: 0;
+  padding: 0; }
+
+li {
+  list-style: none; }
+
+amp-img {
+  max-width: 100%; }
+
+button,
+input,
+select,
+textarea {
+  font: inherit; }
+
+html {
+  font-size: 1rem; }
+
+body {
+  background: #f1f1f1;
+  color: #262626;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  line-height: 1.6; }
+
+a {
+  color:  #004965;
+  text-decoration: none;
+  -webkit-transition: all 0.12s linear 0s;
+  -o-transition: all 0.12s linear 0s;
+  transition: all 0.12s linear 0s; }
+
+a:hover {
+  color: #262626;
+  text-decoration: underline;
+  -webkit-text-decoration-skip: ink;
+  text-decoration-skip: ink; }
+
+a:active {
+  color: #262626; }
+
+a:focus {
+  outline: 2px dotted #004965; }
+
+figure,
+blockquote,
+p,
+ul,
+ol,
+dl,
+table,
+hr,
+fieldset {
+  margin-top: 1.6rem; }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #262626;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: 2.13333rem; }
+
+h1 {
+  font-size: 1.67583rem;
+  font-weight: normal; }
+
+h2 {
+  font-size: 1.4729rem; }
+
+h3 {
+  font-size: 1.29454rem; }
+
+h4 {
+  font-size: 1.13778rem; }
+
+h5 {
+  font-size: 1rem; }
+
+h6 {
+  font-size: 0.87891rem; }
+
+h2 + p,
+h3 + p,
+h4 + p,
+h5 + p,
+h6 + p {
+  margin-top: 0.8rem; }
+
+b,
+strong {
+  font-weight: 600; }
+
+blockquote {
+  color: #6c7175;
+  font-family: "Droid Serif", "Times", "Source Serif Pro", serif;
+  font-style: italic;
+  padding: 1.33333rem 0.53333rem 1.33333rem 3.2rem;
+  position: relative; }
+  blockquote:before {
+    display: block;
+    content: "\201C";
+    font-size: 4.41226rem;
+    position: absolute;
+    left: 0;
+    top: -12px;
+    color: rgba(108, 113, 117, 0.5); }
+  blockquote > :nth-child(1) {
+    margin-top: 0; }
+
+ul,
+ol {
+  margin-left: 2rem; }
+  ul > li,
+  ol > li {
+    list-style: inherit;
+    padding: 0 0 0.26667rem 0.26667rem; }
+
+dl dt {
+  color: #262626;
+  font-weight: 600; }
+
+code,
+pre {
+  background-color: #f1f1f1;
+  font-family: monospace; }
+
+pre {
+  margin: 1.6rem 0 0;
+  padding: 1.6rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto; }
+  pre > code {
+    color: #262626;
+    padding: 0; }
+
+code {
+  border-radius: 3px;
+  color: #262626;
+  padding: 0.26667rem 0.53333rem; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid #d4d4d4;
+  width: 100%;
+  overflow-x: auto;
+  vertical-align: top;
+  text-align: left;
+  white-space: nowrap; }
+  table th {
+    font-weight: 500;
+    padding: 0.53333rem 1.06667rem; }
+  table tr {
+    border-bottom: 1px solid #d4d4d4; }
+    table tr:nth-child(2n) {
+      background: #f1f1f1; }
+  table td {
+    padding: 0.53333rem 1.06667rem; }
+
+figcaption {
+  clear: both;
+  color: rgba(108, 113, 117, 0.6);
+  font-size: 0.82397rem;
+  margin: 0.8rem 0 0;
+  text-align: center; }
+
+sub,
+sup {
+  font-size: 65%; }
+
+hr {
+  border: 0;
+  height: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3); }
+
+.btn, [type=button],
+[type=submit],
+button {
+  background: #004965;
+  border: none;
+  border-radius: 2px;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 0.87891rem;
+  font-weight: 500;
+  line-height: 1.9;
+  padding: 0.53333rem 1.33333rem;
+  text-align: center;
+  text-decoration: none;
+  -webkit-transition: all .15s ease;
+  -o-transition: all .15s ease;
+  transition: all .15s ease;
+  width: auto; }
+  .btn:hover, [type=button]:hover,
+  [type=submit]:hover,
+  button:hover {
+    background: #262626;
+    color: #ffffff; }
+  .btn:focus, [type=button]:focus,
+  [type=submit]:focus,
+  button:focus {
+    outline: none; }
+  .btn-outline {
+    border: 1px solid #ddd;
+    background: #ffffff;
+    border-radius: 3px;
+    color: #262626; }
+
+[type=button],
+[type=submit],
+button {
+  text-transform: uppercase;
+  -webkit-appearance: none;
+  -moz-appearance: none; }
+
+.navbar {
+  background: #004965;
+  -webkit-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
+  line-height: 3;
+  max-height: 4rem; }
+  .navbar > div {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    text-align: left;
+    max-width: 700px;
+    margin: 0 auto; }
+  .navbar a {
+    color: #ffffff;
+    text-decoration: none; }
+  .navbar-sidebar-toggle {
+    left: 0;
+    position: relative;
+    text-indent: -99999rem; }
+    .navbar-sidebar-toggle:before {
+      content: "";
+      display: block;
+      border-top: 0.375rem double #ffffff;
+      border-bottom: 0.125rem solid #ffffff;
+      height: 0.125rem;
+      position: absolute;
+      text-indent: 0;
+      top: 50%;
+      width: 1.3rem;
+      -webkit-transform: translate(0px, -50%);
+      -ms-transform: translate(0px, -50%);
+      transform: translate(0px, -50%); }
+
+
+.logo {
+            display: inline-block;
+  font-weight: 600;
+  line-height: 1;
+            margin: 0 auto;
+            height: 2rem;
+            text-indent: -9999px;
+            width: 240px;vertical-align: middle;
+        }
+        .logo.logo-text {
+            line-height: 2;
+            text-align: center;
+            text-indent: 0;
+        }
+
+amp-sidebar {
+  background: #ffffff;
+  width: 240px; }
+  amp-sidebar > ul {
+    margin: 0.8rem 0 0;
+    padding: 0; }
+    amp-sidebar > ul ul {
+      border-left: 1px solid #d4d4d4;
+      margin: 0.53333rem 0 0; }
+    amp-sidebar > ul li {
+      color: #262626;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      list-style: none;
+      line-height: 1.4;
+      padding: 0.42667rem 1.06667rem; }
+      amp-sidebar > ul li li {
+        font-weight: normal;
+        padding: 0.26667rem 0 0.26667rem 1.06667rem; }
+    amp-sidebar > ul a,
+    amp-sidebar > ul a:visited {
+      color: #262626; }
+
+.bg-white {
+  background: #ffffff; }
+
+.wrap-page {
+  max-width: 700px;
+  margin: 0 auto; }
+
+@media all and (max-width: 43.6875em) {
+  .wrap-inner {
+    padding: 0 6%; } }
+
+.page-title {
+  background: #ffffff;
+  -webkit-box-shadow: 0 2px 3px rgba(38, 38, 38, 0.1);
+  box-shadow: 0 2px 3px rgba(38, 38, 38, 0.1);
+  margin-bottom: 0.8rem;
+  padding: 1.6rem 6%; }
+  .page-title > h1 {
+    margin: 0;
+    font-size: 1.29454rem; }
+  .page-title > p {
+    font-size: 0.87891rem;
+    color: #6c7175;
+    line-height: 1.3;
+    margin: 0.26667rem 0 0; }
+  .page-title-author {
+    border-radius: 50%;
+    float: left;
+    height: 2.5rem;
+    width: 2.5rem; }
+    .page-title-author + h1 {
+      margin-left: 3.5rem; }
+      .page-title-author + h1 + p {
+        margin-left: 3.5rem; }
+
+.card {
+  background: #ffffff;
+  -webkit-box-shadow: 0 2px 3px rgba(38, 38, 38, 0.1);
+  box-shadow: 0 2px 3px rgba(38, 38, 38, 0.1);
+  margin-bottom: 0.8rem;
+  padding-bottom: 1.06667rem; }
+
+  .card-meta {
+    border-top: 1px solid #d4d4d4;
+    color: rgba(108, 113, 117, 0.6);
+    font-size: 0.7242rem;
+    font-weight: 500;
+    margin-top: 1.06667rem;
+    padding-top: 1.06667rem;
+    text-transform: uppercase; }
+    .card-meta a + time:before {
+      content: "";
+      background: #d4d4d4;
+      display: inline-block;
+      height: 3px;
+      margin: 0 8px;
+      width: 3px;
+      vertical-align: middle;
+      border-radius: 50%; }
+  .card-text {
+    font-size: 0.9375rem;
+    overflow: hidden;
+    padding: 0 6%; }
+    .card-text h2 {
+      font-size: 1.13778rem; }
+
+.post {
+  margin-bottom: 2.13333rem; }
+  .post-featured-image {
+    margin-top: 0;
+    position: relative; }
+    .post-featured-image > figcaption {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 3px;
+      color: #ffffff;
+      position: absolute;
+      bottom: 0.8rem;
+      padding: 0 0.26667rem;
+      right: 6%; }
+  .post-header {
+    margin-bottom: 2.13333rem; }
+  .post-meta {
+    border-bottom: 1px solid #d4d4d4;
+    color: rgba(108, 113, 117, 0.6);
+    font-size: 0.7242rem;
+    font-weight: 500;
+    margin-top: 1.06667rem;
+    padding-bottom: 1.06667rem;
+    text-transform: uppercase; }
+    .post-meta a + time:before {
+      content: "";
+      background: #d4d4d4;
+      display: inline-block;
+      height: 3px;
+      margin: 0 8px;
+      width: 3px;
+      vertical-align: middle;
+      border-radius: 50%; }
+  .post-tag {
+    margin: 0; }
+    .post-tag > li {
+      display: inline-block;
+      padding: 0; }
+      .post-tag > li a {
+        background: #f1f1f1;
+        border-radius: 2px;
+        color: #6c7175;
+        font-size: 0.77248rem;
+        display: inline-block;
+        margin: 0 0.26667rem 0.26667rem 0;
+        padding: 0.26667rem 0.53333rem; }
+        .post-tag > li a:hover {
+          background: #004965;
+          color: #ffffff;
+          text-decoration: none; }
+  .post-share {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    margin-top: 1.6rem;
+    width: 100%; }
+    .post-share amp-social-share {
+      -webkit-box-flex: 1;
+      -ms-flex: 1 0 auto;
+      flex: 1 0 auto;
+      background-size: 24px; }
+  .post-scroll {
+    color: #ffffff;
+    background: #004965;
+    bottom: 10px;
+    border-radius: 50%;
+    border: none;
+    -webkit-box-shadow: 0 1px 1.5px 0 rgba(38, 38, 38, 0.12), 0 1px 1px 0 rgba(38, 38, 38, 0.24);
+    box-shadow: 0 1px 1.5px 0 rgba(38, 38, 38, 0.12), 0 1px 1px 0 rgba(38, 38, 38, 0.24);
+    font-size: 1.13778rem;
+    height: 46px;
+    opacity: 0;
+    outline: none;
+    position: fixed;
+    padding: 0;
+    right: 4%;
+    visibility: hidden;
+    width: 46px;
+    z-index: 9999; }
+    .post-scroll-marker {
+      height: 0px;
+      position: absolute;
+      top: 100px;
+      width: 0px; }
+        .post-pagination {
+    background: #f1f1f1;
+    -webkit-box-shadow: inset 0 2px 3px rgba(38, 38, 38, 0.1);
+    box-shadow: inset 0 2px 3px rgba(38, 38, 38, 0.1);
+    border-top: 1px solid #d4d4d4;
+    padding: 1.06667rem 0; }
+    .post-pagination > div {
+      line-height: 1.2;
+      padding: 0.53333rem 1.06667rem;
+      text-align: center; }
+      .post-pagination > div span {
+        display: block;
+        color: #6c7175;
+        font-size: 0.7242rem;
+        font-weight: 500;
+        margin-bottom: 0.26667rem;
+        text-transform: uppercase; }
+    .post-pagination-prev a:before {
+      content: "\2190";
+      margin-right: 0.26667rem; }
+    .post-pagination-next a:after {
+      content: "\2192";
+      margin-left: 0.26667rem; }
+
+aside {
+  margin: 1.6rem 0 0; }
+
+.align-left {
+  text-align: left; }
+
+.align-right {
+  text-align: right; }
+
+.align-center {
+  text-align: center; }
+
+.align-justify {
+  text-align: justify; }
+
+.msg {
+  border-left: 2px solid transparent;
+  padding: 1.06667rem 1.06667rem; }
+  .msg--highlight {
+    background-color: #fff8e6;
+    border-color: #e2ac4f; }
+  .msg--info {
+    background: rgba(45, 97, 201, 0.03);
+    border-color: #004965; }
+  .msg--success {
+    background: #f7fbf6;
+    border-color: #5ab44b; }
+  .msg--warning {
+    background: #fff3f3;
+    border-color: #c06367;
+    color: #a94442; }
+
+.dropcap:first-letter {
+  float: left;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-size: 2.16943rem;
+  line-height: 0.7;
+  margin-right: 0.53333rem;
+  padding: 0.53333rem 0.53333rem 0.53333rem 0; }
+
+.pagination {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  margin: 0.8rem 0; }
+  .pagination > a {
+    padding-left: 0;
+    padding-right: 0;
+    width: 49%; }
+  .pagination-right {
+    margin-left: auto; }
+
+.bottom {
+  background: #004965;
+  color: #ffffff;
+  padding: 1.06667rem 4%;
+  text-align: center; }</style><style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript><script async src="https://cdn.ampproject.org/v0.js"></script><script custom-element="amp-animation" src="https://cdn.ampproject.org/v0/amp-animation-0.1.js" async></script><script custom-element="amp-position-observer" src="https://cdn.ampproject.org/v0/amp-position-observer-0.1.js" async></script></head><body class="bg-white"><nav class="navbar wrap-inner" id="top"><div><a on="tap:navbar-sidebar.toggle" class="navbar-sidebar-toggle" title="Menu">Menu</a> <a class="logo logo-text" href="https://fachinformatiker.github.io/fachinformatiker.github.io/amp/">fachinformatiker.app</a></div></nav><main class="wrap-page"><article class="post"><div class="wrap-inner"><header class="post-header"><h1>SSH Command</h1><p class="post-meta">By <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/amp/authors/patrick-szalewicz/" rel="nofollow" title="Patrick Szalewicz">Patrick Szalewicz</a> <time datetime="2020-01-22T12:54">January 22, 2020</time></p></header><p>Secure Shell (SSH) is a cryptographic network protocol used for an encrypted connection between a client and a server. The ssh client creates a secure connection to the SSH server on a remote machine. The encrypted connection can be used to execute commands on the server, X11 tunneling, port forwarding, and more.</p><p>There are a number of SSH clients available both free and commercial, with OpenSSH being the most widely used client. It is available on all major platforms, including Linux, OpenBSD, Windows, macOS and others.<span id="ezoic-pub-ad-placeholder-158" class="ezoic-adpicker-ad"></span></p><p>In this article, we will explain how to use the OpenSSH command-line client (<code>ssh</code>) to login to a remote machine and run commands or perform other operations.<br><span id="ezoic-pub-ad-placeholder-138" class="ezoic-adpicker-ad"></span></p><h2 id="installing-openssh-client">Installing OpenSSH Client</h2><p>The OpenSSH client program is called <code>ssh</code> and can be invoked from the terminal. The OpenSSH client package also provides other SSH utilities such as <a href="https://linuxize.com/post/how-to-use-scp-command-to-securely-transfer-files/"><code>scp</code></a> and <a href="https://linuxize.com/post/how-to-use-linux-sftp-command-to-transfer-files/"><code>sftp</code></a> that are installed alongside the <code>ssh</code> command.</p><h3 id="installing-openssh-client-on-linux">Installing OpenSSH Client on Linux</h3><p>OpenSSH client is preinstalled on most Linux distributions by default. If your system doesn't have the ssh client installed, you can install it using the package manager of your distribution.<span id="ezoic-pub-ad-placeholder-139" class="ezoic-adpicker-ad"></span></p><h3 id="installing-openssh-on-ubuntu-and-debian">Installing OpenSSH on Ubuntu and Debian</h3><pre class="terminal"><code>sudo apt update</code><code>sudo apt install openssh-client</code></pre><h3 id="installing-openssh-on-centos-and-fedora">Installing OpenSSH on CentOS and Fedora</h3><pre class="terminal"><code>sudo dnf install openssh-clients</code></pre><h3 id="installing-openssh-client-on-windows-10">Installing OpenSSH Client on Windows 10</h3><p>Most Windows users are using Putty to connect to a remote machine over SSH. However, the latest versions of Windows 10 include an OpenSSH client and server. Both packages can be installed via the GUI or PowerShell.<span id="ezoic-pub-ad-placeholder-156" class="ezoic-adpicker-ad"></span></p><p><span id="ezoic-pub-ad-placeholder-159" class="ezoic-adpicker-ad"></span>To find the exact name of the OpenSSH package, type the following command:<span id="ezoic-pub-ad-placeholder-140" class="ezoic-adpicker-ad"></span></p><div class="highlight"><pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="nb">Get-WindowsCapability</span> <span class="n">-Online</span> <span class="p">|</span> <span class="p">?</span> <span class="n">Name</span> <span class="o">-like</span> <span class="s1">'OpenSSH*'</span>
+</code></pre><p><span class="code-copy button main small" data-clipboard-text="Get-WindowsCapability -Online | ? Name -like 'OpenSSH*' ">Copy</span></p></div><p>The command should return something like this:</p><pre><code class="language-output" data-lang="output">Name  : OpenSSH.Client~~~~0.0.1.0
+State : NotPresent
+Name  : OpenSSH.Server~~~~0.0.1.0
+State : NotPresent
+</code></pre><p>Once you know the package name install it by running:</p><div class="highlight"><pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="nb">Add-WindowsCapability</span> <span class="n">-Online</span> <span class="n">-Name</span> <span class="n">OpenSSH</span><span class="p">.</span><span class="n">Server</span><span class="p">~</span><span class="p">~</span><span class="p">~</span><span class="p">~</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">1</span><span class="p">.</span><span class="n">0</span>
+</code></pre><p><span class="code-copy button main small" data-clipboard-text="Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0 ">Copy</span></p></div><p>On success the output will look something like this:</p><pre><code class="language-output" data-lang="output">Path          :
+Online        : True
+RestartNeeded : False
+</code></pre><h3 id="installing-openssh-client-on-macos">Installing OpenSSH Client on macOS</h3><p>macOS ships with the OpenSSH client installed by default.</p><h2 id="how-to-use-the-ssh-command">How to Use the <code>ssh</code> Command</h2><p>The following requirements must be met to be able to login into a remote machine via SSH:<span id="ezoic-pub-ad-placeholder-142" class="ezoic-adpicker-ad"></span></p><ul><li>An SSH server must be running on the remote machine.</li><li>The SSH port must be open in the remote machine firewall.</li><li>You must know the username and the password of the remote account. The account needs to have proper privileges for remote login.</li></ul><p>The basic syntax of the <code>ssh</code> command is as follows:<span id="ezoic-pub-ad-placeholder-160" class="ezoic-adpicker-ad"></span></p><div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">ssh <span class="o">[</span>OPTIONS<span class="o">]</span> <span class="o">[</span>USER@<span class="o">]</span>:HOST
+</code></pre><p><span class="code-copy button main small" data-clipboard-text="ssh [OPTIONS] [USER@]:HOST ">Copy</span></p></div><p>To use the <code>ssh</code> command open your Terminal or PowerShell and type <code>ssh</code> followed by the remote hostname:</p><pre class="terminal"><code>ssh ssh.fachinformatiker.app</code></pre><p>When you connect to a remote machine through SSH for the first time, you will see a message like below.</p><pre><code>The authenticity of host 'ssh.<code class="terminal-line">fachinformatiker.app</code> (185.240.243.63)' can't be established. ECDSA key fingerprint is SHA256:iG/mndQliJygpEMrM69LXsZP+N5pbg1GzwXK5Qil5Kc. Are you sure you want to continue connecting (yes/no)? </code></pre><p>Each host has a unique fingerprint that is stored in the <code>~/.ssh/known_hosts</code> file.<span id="ezoic-pub-ad-placeholder-143" class="ezoic-adpicker-ad"></span></p><p><span id="ezoic-pub-ad-placeholder-161" class="ezoic-adpicker-ad"></span>Type <code>yes</code> to store the remote fingerprint, and you’ll be prompted to enter your password.</p><pre><code>Warning: Permanently added 'ssh.<code class="terminal-line">fachinformatiker.app</code>' (ECDSA) to the list of known hosts. dev@ssh.<code>fachinformatiker.app</code>'s password: </code></pre><p>Once you enter the password, you will be logged into the remote machine.</p><p>When the username is not given, the <code>ssh</code> command uses the current system login name.<span id="ezoic-pub-ad-placeholder-144" class="ezoic-adpicker-ad"></span></p><p>To log in as a different user, specify the username and the host in the following format:</p><pre class="terminal"><code>ssh username@hostname</code></pre><p>The username can also be specified with the <code>-l</code> option:<span id="ezoic-pub-ad-placeholder-157" class="ezoic-adpicker-ad"></span></p><pre class="terminal"><code>ssh -l username hostname</code></pre><p>By default, when no port is given, the SSH client will try to connect to the remote server on port 22. On some servers, administrators are changing the default SSH port to add an extra layer of security to the server by reducing the risk of automated attacks.<span id="ezoic-pub-ad-placeholder-145" class="ezoic-adpicker-ad"></span></p><p>To connect on a non-default port, use the <code>-p</code> option to specify the port:</p><pre class="terminal"><code>ssh -p 5522 username@hostname</code></pre><p>If you are experiencing authentication or connection issues, use the <code>-v</code> option to tell <code>ssh</code> to print debugging messages:</p><pre class="terminal"><code>ssh -v username@hostname</code></pre><p>To increase the level of verbosity, use <code>-vv</code> or <code>-vvv</code>.</p><p>The <code>ssh</code> command accepts a number of options.<span id="ezoic-pub-ad-placeholder-146" class="ezoic-adpicker-ad"></span></p><p>For a complete list of all options read the <code>ssh</code> man page by typing <code>man ssh</code> in your terminal.</p><h2 id="ssh-config-file">SSH Config File</h2><p>If you are connecting to multiple remote systems over SSH on a daily basis, you'll find that remembering all of the remote IP addresses, different usernames, non-standard ports, and various command-line options is difficult, if not impossible.</p><p>The OpenSSH client reads the options set in the per-user configuration file (<code>~/.ssh/config</code>). In this file, you can store different SSH options for each remote machine you connect to.</p><p>A sample SSH config is shown below:</p><div class="highlight"><pre class="chroma"><code class="language-ini" data-lang="ini"><span class="na">Host dev</span>
+    <span class="na">HostName dev.</span><code>fachinformatiker.app</code> <span class="na">User patrick</span> <span class="na">Port 4422</span> </code></pre><p><span class="code-copy button main small" data-clipboard-text="Host dev HostName dev.linuxize.com User mike Port 4422 ">Copy</span></p></div><p>When you invoke the ssh client by typing <code>ssh dev</code> the command will read the <code>~/.ssh/config</code> file and use the connection details that are specified for the dev host. In this example, <code>ssh dev</code> is equivalent to the following:<span id="ezoic-pub-ad-placeholder-147" class="ezoic-adpicker-ad"></span></p><pre class="terminal"><code>ssh -p 4422 patrick@dev.fachinformatiker.app</code></pre><h1 id="public-key-authentication">Public Key Authentication</h1><p>The SSH protocol supports various authentication mechanisms.</p><p>The public key-based authentication mechanism allows you to log in to the remote server without having to type your password.</p><p>This method works by generating a pair of cryptographic keys that are used for authentication. The private key is stored on the client device, and the public key is transferred to each remote server that you want to log in. The remote server must be configured to accept key authentication.</p><p>If you already don't have SSH key pair on your local machine you can generate one by typing:</p><pre class="terminal"><code>ssh-keygen -t rsa -b 4096 -C "your_email@domain.com"</code></pre><p>You will be asked to type a secure passphrase. Whether you want to use passphrase it's up to you.</p><p>Once you have your key pair, copy the public key to the remote server:<span id="ezoic-pub-ad-placeholder-149" class="ezoic-adpicker-ad"></span></p><pre class="terminal"><code>ssh-copy-id username@hostname</code></pre><p>Enter the remote user password, and the public key will be appended to the remote user <code>authorized_keys</code> file.</p><p>Once the key is uploaded, you can log in to the remote server without being prompted for a password.</p><p>By setting a key-based authentication, you can simplify the login process and increase the overall server security.</p><h2 id="port-forwarding">Port Forwarding</h2><p>SSH tunneling or SSH port forwarding is a method of creating an encrypted SSH connection between a client and a server machine through which services ports can be relayed.</p><p>SSH forwarding is useful for transporting network data of services that use an unencrypted protocol, such as VNC or FTP, accessing geo-restricted content or bypassing intermediate firewalls. Basically, you can forward any TCP port and tunnel the traffic over a secure SSH connection.</p><p>There are three types of SSH port forwarding:</p><h3 id="local-port-forwarding">Local Port Forwarding</h3><p>Local port forwarding allows you to forward a connection from the client host to the SSH server host and then to the destination host port.</p><p>To create a local port forwarding pass the <code>-L</code> option to the <code>ssh</code> client:</p><pre class="terminal"><code>ssh -L [LOCAL_IP:]LOCAL_PORT:DESTINATION_HOST:DESTINATION_PORT -N -f username@hostname</code></pre><p>The -f option tells the <code>ssh</code> command to run in the background and <code>-N</code> not to execute a remote command.</p><h3 id="remote-port-forwarding">Remote Port Forwarding</h3><p>Remote port forwarding is the opposite of local port forwarding. It forwards a port from the server host to the client host and then to the destination host port.<span id="ezoic-pub-ad-placeholder-148" class="ezoic-adpicker-ad"></span></p><p>The <code>-L</code> option tells <code>ssh</code> to create a remote port forwarding:</p><pre class="terminal"><code>ssh -R [REMOTE:]REMOTE_PORT:DESTINATION:DESTINATION_PORT -N -f username@hostname</code></pre><h3 id="dynamic-port-forwarding">Dynamic Port Forwarding</h3><p>Dynamic port forwarding creates a SOCKS proxy server that allows communication across a range of ports.</p><p>To create a dynamic port forwarding (SOCKS) pass the <code>-D</code> option to the ssh client:</p><pre class="terminal"><code>ssh -D [LOCAL_IP:]LOCAL_PORT  -N -f username@hostname</code></pre><p>For more detailed information and step-by-step instruction, check the article on How to Set up SSH Tunneling (Port Forwarding) .</p><h2 id="conclusion">Conclusion</h2><p>To connect to a remote server via SSH use the <code>ssh</code> command followed by the remote username and hostname (<code>ssh username@hostname</code>).</p><p>Knowing how to use the <code>ssh</code> command is an essential for managing remote server.</p><p>If you have any questions, please leave a comment below.</p><aside><div class="post-share"><amp-social-share type="system" width="40" height="40" data-param-text="SSH Command"></amp-social-share><amp-social-share type="twitter" width="40" height="40" data-param-text="SSH Command" data-param-url="https://fachinformatiker.github.io/fachinformatiker.github.io/amp/ssh-command.html"></amp-social-share><amp-social-share type="whatsapp" width="40" height="40" data-param-text="SSH Command"></amp-social-share></div></aside></div></article><nav class="post-pagination wrap-inner"><div class="post-pagination-prev"><span>Previous Post</span> <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/amp/how-to-set-up-ssh-keys-on-linux.html">How to Set Up SSH Keys on Linux</a></div><div class="post-pagination-next"><span>Next Post</span> <a href="https://fachinformatiker.github.io/fachinformatiker.github.io/amp/how-to-change-hostname.html">How to Change Hostname</a></div></nav></main><amp-animation id="showAnim" layout="nodisplay"><script type="application/json">{
+                    "duration": "200ms",
+                    "fill": "both",
+                    "iterations": "1",
+                    "direction": "alternate",
+                    "animations": [{
+                        "selector": ".post-scroll",
+                        "keyframes": [{
+                            "opacity": "1",
+                            "visibility": "visible",
+                            "transform": "scale(1)"
+                        }]
+                    }]
+                }</script></amp-animation><amp-animation id="hideAnim" layout="nodisplay"><script type="application/json">{
+                    "duration": "200ms",
+                    "fill": "both",
+                    "iterations": "1",
+                    "direction": "alternate",
+                    "animations": [{
+                        "selector": ".post-scroll",
+                        "keyframes": [{
+                            "opacity": "0",
+                            "visibility": "hidden",
+                            "transform": "scale(0.1)"
+                        }]
+                    }]
+                }</script></amp-animation><div class="post-scroll-marker"><amp-position-observer on="enter:hideAnim.start; exit:showAnim.start" layout="nodisplay"></amp-position-observer></div><button class="post-scroll" on="tap:top.scrollTo(duration=200)">&#8593;</button><footer class="bottom">Powered by Publii</footer><amp-sidebar id="navbar-sidebar" layout="nodisplay"><ul></ul></amp-sidebar></body></html>
